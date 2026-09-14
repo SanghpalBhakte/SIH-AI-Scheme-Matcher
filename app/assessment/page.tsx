@@ -169,7 +169,7 @@ export default function AssessmentPage() {
 
         <Card key={step.id} className="animate-fade-in-up">
           <CardHeader>
-            <p className="text-xs font-medium uppercase tracking-wide text-accent">{t('assessment.stepLabel', { n: stepIndex + 1 })}</p>
+            <p className="text-xs font-medium uppercase tracking-wide text-accent-text">{t('assessment.stepLabel', { n: stepIndex + 1 })}</p>
             <CardTitle className="font-display text-xl">{t(`assessment.step.${step.id}.title`)}</CardTitle>
             <CardDescription>{t(`assessment.step.${step.id}.description`)}</CardDescription>
           </CardHeader>

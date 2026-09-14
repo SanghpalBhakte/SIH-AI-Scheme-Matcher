@@ -132,7 +132,7 @@ export default function SchemeDetailsPage({ params }: { params: { id: string } }
           <DisclaimerBanner />
 
           <section className="space-y-3 rounded-md border border-border bg-secondary/30 p-4">
-            <h2 className="text-xs font-semibold uppercase tracking-wide text-accent">{t('schemeDetails.quickRefTitle')}</h2>
+            <h2 className="text-xs font-semibold uppercase tracking-wide text-accent-text">{t('schemeDetails.quickRefTitle')}</h2>
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="flex items-start gap-2">
                 <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden />
@@ -174,7 +174,7 @@ export default function SchemeDetailsPage({ params }: { params: { id: string } }
           </section>
 
           <section className="space-y-2 border-t border-border pt-4">
-            <h2 className="text-xs font-semibold uppercase tracking-wide text-accent">{t('schemeDetails.overview')}</h2>
+            <h2 className="text-xs font-semibold uppercase tracking-wide text-accent-text">{t('schemeDetails.overview')}</h2>
             <SchemeOverview scheme={scheme} />
           </section>
 
@@ -182,7 +182,7 @@ export default function SchemeDetailsPage({ params }: { params: { id: string } }
             {/* Heading intentionally isn't "Why this matches you" — MatchExplanation
                 already opens with that exact phrase inline, and repeating it as the
                 section heading directly above it read as duplicate messaging. */}
-            <h2 className="text-xs font-semibold uppercase tracking-wide text-accent">{t('schemeDetails.matchExplanation')}</h2>
+            <h2 className="text-xs font-semibold uppercase tracking-wide text-accent-text">{t('schemeDetails.matchExplanation')}</h2>
             {!isHydrated ? (
               <p className="text-sm text-muted-foreground">{t('common.loading')}</p>
             ) : result ? (
@@ -206,14 +206,14 @@ export default function SchemeDetailsPage({ params }: { params: { id: string } }
               on not misrepresenting a direct browse as a match). */}
           {result && (
             <section className="space-y-2 border-t border-border pt-4">
-              <h2 className="text-xs font-semibold uppercase tracking-wide text-accent">{t('reasoning.whyTitle')}</h2>
+              <h2 className="text-xs font-semibold uppercase tracking-wide text-accent-text">{t('reasoning.whyTitle')}</h2>
               <RecommendationReasoning result={result} scheme={scheme} variant="full" />
               <RecommendationDisclaimer className="pt-1" />
             </section>
           )}
 
           <section className="space-y-2 border-t border-border pt-4">
-            <h2 className="text-xs font-semibold uppercase tracking-wide text-accent">{t('schemeDetails.applicationChecklist')}</h2>
+            <h2 className="text-xs font-semibold uppercase tracking-wide text-accent-text">{t('schemeDetails.applicationChecklist')}</h2>
             <p className="text-xs text-muted-foreground">{t('schemeDetails.checklistIntro')}</p>
             <ApplicationChecklist scheme={scheme} />
           </section>

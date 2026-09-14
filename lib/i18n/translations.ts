@@ -397,6 +397,9 @@ const en: Dictionary = {
     "This page ran into an unexpected error. You can try again, or head back to the homepage — nothing else in the app is affected.",
   'error.startOver': 'Start over',
   'error.goHome': 'Go home',
+  'notFound.title': 'Page not found',
+  'notFound.body': "The page you're looking for doesn't exist or may have moved. Check the address, or head back home.",
+  'a11y.skipToContent': 'Skip to main content',
   'dataConfidence.label': 'Sourcing note:',
   'machineTranslation.title': 'Machine-translated:',
   'machineTranslation.body':
@@ -727,6 +730,9 @@ const hi: Dictionary = {
     'इस पेज पर एक अनपेक्षित त्रुटि आ गई। आप फिर से कोशिश कर सकते हैं, या होमपेज पर वापस जा सकते हैं — ऐप में बाकी कुछ भी प्रभावित नहीं हुआ है।',
   'error.startOver': 'फिर से शुरू करें',
   'error.goHome': 'होम पर जाएं',
+  'notFound.title': 'पेज नहीं मिला',
+  'notFound.body': 'यह पेज इस प्रोटोटाइप में मौजूद नहीं है।',
+  'a11y.skipToContent': 'मुख्य सामग्री पर जाएं',
   'dataConfidence.label': 'स्रोत संबंधी टिप्पणी:',
   'machineTranslation.title': 'मशीन-अनुवादित:',
   'machineTranslation.body':
@@ -1031,6 +1037,9 @@ const bn: Dictionary = {
     'এই পেজে একটি অপ্রত্যাশিত ত্রুটি ঘটেছে। আপনি আবার চেষ্টা করতে পারেন, অথবা হোমপেজে ফিরে যেতে পারেন — অ্যাপের বাকি অংশ প্রভাবিত হয়নি।',
   'error.startOver': 'আবার শুরু করুন',
   'error.goHome': 'হোমে যান',
+  'notFound.title': 'পেজ পাওয়া যায়নি',
+  'notFound.body': 'এই প্রোটোটাইপে এই পেজটি নেই।',
+  'a11y.skipToContent': 'মূল বিষয়বস্তুতে যান',
   'dataConfidence.label': 'উৎস সংক্রান্ত মন্তব্য:',
   'machineTranslation.title': 'যন্ত্র-অনূদিত:',
   'machineTranslation.body':
@@ -1335,6 +1344,9 @@ const mr: Dictionary = {
     'या पेजवर एक अनपेक्षित त्रुटी आली. तुम्ही पुन्हा प्रयत्न करू शकता, किंवा मुख्यपृष्ठावर परत जाऊ शकता — अ‍ॅपमधील इतर कशावरही परिणाम झालेला नाही.',
   'error.startOver': 'पुन्हा सुरू करा',
   'error.goHome': 'मुख्यपृष्ठावर जा',
+  'notFound.title': 'पान सापडले नाही',
+  'notFound.body': 'हे पान या प्रोटोटाइपमध्ये अस्तित्वात नाही.',
+  'a11y.skipToContent': 'मुख्य सामग्रीवर जा',
   'dataConfidence.label': 'स्रोताबाबत टीप:',
   'machineTranslation.title': 'यंत्र-अनुवादित:',
   'machineTranslation.body':
@@ -1639,6 +1651,9 @@ const te: Dictionary = {
     'ఈ పేజీలో ఊహించని లోపం ఏర్పడింది. మీరు మళ్ళీ ప్రయత్నించవచ్చు, లేదా హోమ్‌పేజీకి తిరిగి వెళ్లవచ్చు — యాప్‌లోని మిగతా భాగానికి ఎలాంటి ప్రభావం లేదు.',
   'error.startOver': 'మళ్ళీ మొదలుపెట్టండి',
   'error.goHome': 'హోమ్‌కు వెళ్ళండి',
+  'notFound.title': 'పేజీ కనుగొనబడలేదు',
+  'notFound.body': 'ఈ ప్రోటోటైప్‌లో ఈ పేజీ లేదు.',
+  'a11y.skipToContent': 'ప్రధాన కంటెంట్‌కు వెళ్లండి',
   'dataConfidence.label': 'మూలం సంబంధిత గమనిక:',
   'machineTranslation.title': 'యంత్ర-అనువాదం:',
   'machineTranslation.body':
@@ -1943,6 +1958,9 @@ const ta: Dictionary = {
     'இந்தப் பக்கத்தில் எதிர்பாராத பிழை ஏற்பட்டது. நீங்கள் மீண்டும் முயற்சிக்கலாம், அல்லது முகப்புப் பக்கத்திற்குத் திரும்பலாம் — ஆப்பின் மற்ற பகுதிகள் பாதிக்கப்படவில்லை.',
   'error.startOver': 'மீண்டும் தொடங்கு',
   'error.goHome': 'முகப்புக்குச் செல்',
+  'notFound.title': 'பக்கம் கிடைக்கவில்லை',
+  'notFound.body': 'இந்த முன்மாதிரியில் இந்தப் பக்கம் இல்லை.',
+  'a11y.skipToContent': 'முதன்மை உள்ளடக்கத்திற்குச் செல்',
   'dataConfidence.label': 'மூல குறிப்பு:',
   'machineTranslation.title': 'இயந்திர மொழிபெயர்ப்பு:',
   'machineTranslation.body':
@@ -2247,6 +2265,9 @@ const gu: Dictionary = {
     'આ પેજ પર એક અણધારી ભૂલ આવી. તમે ફરીથી પ્રયાસ કરી શકો છો, અથવા મુખ્ય પૃષ્ઠ પર પાછા જઈ શકો છો — એપ્લિકેશનના બાકીના ભાગને અસર થઈ નથી.',
   'error.startOver': 'ફરીથી શરૂ કરો',
   'error.goHome': 'મુખ્ય પૃષ્ઠ પર જાઓ',
+  'notFound.title': 'પેજ મળ્યું નથી',
+  'notFound.body': 'આ પ્રોટોટાઇપમાં આ પેજ નથી.',
+  'a11y.skipToContent': 'મુખ્ય સામગ્રી પર જાઓ',
   'dataConfidence.label': 'સ્રોત વિશે નોંધ:',
   'machineTranslation.title': 'મશીન-અનુવાદિત:',
   'machineTranslation.body':
@@ -2551,6 +2572,9 @@ const kn: Dictionary = {
     'ಈ ಪುಟದಲ್ಲಿ ಅನಿರೀಕ್ಷಿತ ದೋಷ ಸಂಭವಿಸಿದೆ. ನೀವು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಬಹುದು, ಅಥವಾ ಮುಖಪುಟಕ್ಕೆ ಹಿಂತಿರುಗಬಹುದು — ಅಪ್ಲಿಕೇಶನ್‌ನ ಉಳಿದ ಭಾಗಕ್ಕೆ ಯಾವುದೇ ಪರಿಣಾಮ ಇಲ್ಲ.',
   'error.startOver': 'ಮತ್ತೆ ಪ್ರಾರಂಭಿಸಿ',
   'error.goHome': 'ಮುಖಪುಟಕ್ಕೆ ಹೋಗಿ',
+  'notFound.title': 'ಪುಟ ಕಂಡುಬಂದಿಲ್ಲ',
+  'notFound.body': 'ಈ ಪ್ರೋಟೋಟೈಪ್‌ನಲ್ಲಿ ಈ ಪುಟ ಇಲ್ಲ.',
+  'a11y.skipToContent': 'ಮುಖ್ಯ ವಿಷಯಕ್ಕೆ ಹೋಗಿ',
   'dataConfidence.label': 'ಮೂಲದ ಬಗ್ಗೆ ಟಿಪ್ಪಣಿ:',
   'machineTranslation.title': 'ಯಂತ್ರ-ಅನುವಾದಿತ:',
   'machineTranslation.body':
@@ -2886,6 +2910,9 @@ const pa: Dictionary = {
     "ਇਸ ਪੇਜ 'ਤੇ ਇੱਕ ਅਚਾਨਕ ਗਲਤੀ ਆ ਗਈ। ਤੁਸੀਂ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰ ਸਕਦੇ ਹੋ, ਜਾਂ ਹੋਮਪੇਜ 'ਤੇ ਵਾਪਸ ਜਾ ਸਕਦੇ ਹੋ — ਐਪ ਦੇ ਬਾਕੀ ਹਿੱਸੇ 'ਤੇ ਕੋਈ ਅਸਰ ਨਹੀਂ ਪਿਆ।",
   'error.startOver': 'ਦੁਬਾਰਾ ਸ਼ੁਰੂ ਕਰੋ',
   'error.goHome': "ਹੋਮ 'ਤੇ ਜਾਓ",
+  'notFound.title': 'ਪੇਜ ਨਹੀਂ ਮਿਲਿਆ',
+  'notFound.body': 'ਇਹ ਪੇਜ ਇਸ ਪ੍ਰੋਟੋਟਾਈਪ ਵਿੱਚ ਮੌਜੂਦ ਨਹੀਂ ਹੈ।',
+  'a11y.skipToContent': "ਮੁੱਖ ਸਮੱਗਰੀ 'ਤੇ ਜਾਓ",
   'dataConfidence.label': 'ਸਰੋਤ ਸੰਬੰਧੀ ਨੋਟ:',
   'machineTranslation.title': 'ਮਸ਼ੀਨ-ਅਨੁਵਾਦਿਤ:',
   'machineTranslation.body':
@@ -3229,6 +3256,9 @@ const or: Dictionary = {
     'ଏହି ପୃଷ୍ଠାରେ ଏକ ଅପ୍ରତ୍ୟାଶିତ ତ୍ରୁଟି ଘଟିଛି। ଆପଣ ପୁଣି ଚେଷ୍ଟା କରିପାରିବେ, କିମ୍ବା ମୁଖ୍ୟପୃଷ୍ଠାକୁ ଫେରିଯାଇପାରିବେ — ଆପ୍‌ର ବାକି ଅଂଶ ପ୍ରଭାବିତ ହୋଇନାହିଁ।',
   'error.startOver': 'ପୁଣି ଆରମ୍ଭ କରନ୍ତୁ',
   'error.goHome': 'ମୁଖ୍ୟପୃଷ୍ଠାକୁ ଯାଆନ୍ତୁ',
+  'notFound.title': 'ପୃଷ୍ଠା ମିଳିଲା ନାହିଁ',
+  'notFound.body': 'ଏହି ପ୍ରୋଟୋଟାଇପରେ ଏହି ପୃଷ୍ଠା ନାହିଁ।',
+  'a11y.skipToContent': 'ମୁଖ୍ୟ ବିଷୟବସ୍ତୁକୁ ଯାଆନ୍ତୁ',
   'dataConfidence.label': 'ଉତ୍ସ ସମ୍ବନ୍ଧୀୟ ଟିପ୍ପଣୀ:',
   'machineTranslation.title': 'ଯାନ୍ତ୍ରିକ-ଅନୁବାଦିତ:',
   'machineTranslation.body':
@@ -3574,6 +3604,9 @@ const ml: Dictionary = {
     'ഈ പേജിൽ അപ്രതീക്ഷിതമായ ഒരു പിശക് ഉണ്ടായി. നിങ്ങൾക്ക് വീണ്ടും ശ്രമിക്കാം, അല്ലെങ്കിൽ ഹോംപേജിലേക്ക് മടങ്ങാം — ആപ്പിന്റെ മറ്റ് ഭാഗങ്ങളെ ഇത് ബാധിച്ചിട്ടില്ല.',
   'error.startOver': 'വീണ്ടും ആരംഭിക്കുക',
   'error.goHome': 'ഹോമിലേക്ക് പോകുക',
+  'notFound.title': 'പേജ് കണ്ടെത്തിയില്ല',
+  'notFound.body': 'ഈ പ്രോട്ടോടൈപ്പിൽ ഈ പേജ് ഇല്ല.',
+  'a11y.skipToContent': 'പ്രധാന ഉള്ളടക്കത്തിലേക്ക് പോകുക',
   'dataConfidence.label': 'സ്രോതസ്സ് സംബന്ധിച്ച കുറിപ്പ്:',
   'machineTranslation.title': 'യന്ത്ര-വിവർത്തനം:',
   'machineTranslation.body':
@@ -3875,6 +3908,9 @@ const as: Dictionary = {
     "এই পৃষ্ঠাত এটা অপ্ৰত্যাশিত ত্ৰুটি হ'ল। আপুনি পুনৰ চেষ্টা কৰিব পাৰে, বা হোমপেজলৈ ঘূৰি যাব পাৰে — এপ্‌টোৰ বাকী অংশ প্ৰভাৱিত হোৱা নাই।",
   'error.startOver': 'পুনৰ আৰম্ভ কৰক',
   'error.goHome': 'হোমলৈ যাওক',
+  'notFound.title': 'পৃষ্ঠা বিচাৰি পোৱা নগ\'ল',
+  'notFound.body': 'এই প্ৰ\'টোটাইপত এই পৃষ্ঠাটো নাই।',
+  'a11y.skipToContent': 'মুখ্য বিষয়বস্তুলৈ যাওক',
   'dataConfidence.label': 'উৎস সম্পৰ্কীয় মন্তব্য:',
   'machineTranslation.title': 'যান্ত্ৰিক-অনুবাদিত:',
   'machineTranslation.body':

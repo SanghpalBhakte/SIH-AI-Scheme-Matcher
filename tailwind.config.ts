@@ -34,6 +34,11 @@ const config: Config = {
           DEFAULT: 'hsl(var(--accent))',
           foreground: 'hsl(var(--accent-foreground))',
         },
+        // Darker variant of `accent`, WCAG AA-safe as small text on
+        // background/card — see the --accent-text comment in
+        // globals.css. Use text-accent-text for gold text labels;
+        // text-accent stays correct for icons/badges/borders.
+        'accent-text': 'hsl(var(--accent-text))',
         destructive: {
           DEFAULT: 'hsl(var(--destructive))',
           foreground: 'hsl(var(--destructive-foreground))',

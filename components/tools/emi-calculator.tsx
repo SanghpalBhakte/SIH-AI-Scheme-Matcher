@@ -81,15 +81,15 @@ export function EmiCalculator() {
           <div className="space-y-4 rounded-md border border-border bg-secondary/30 p-4">
             <div className="grid gap-4 sm:grid-cols-3">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-accent">{t('emi.monthlyEmi')}</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-accent-text">{t('emi.monthlyEmi')}</p>
                 <p className="mt-1 text-lg font-bold text-foreground">{formatRupees(result.emi)}</p>
               </div>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-accent">{t('emi.totalInterest')}</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-accent-text">{t('emi.totalInterest')}</p>
                 <p className="mt-1 text-lg font-bold text-foreground">{formatRupees(result.totalInterest)}</p>
               </div>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-accent">{t('emi.totalPayment')}</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-accent-text">{t('emi.totalPayment')}</p>
                 <p className="mt-1 text-lg font-bold text-foreground">{formatRupees(result.totalPayment)}</p>
               </div>
             </div>

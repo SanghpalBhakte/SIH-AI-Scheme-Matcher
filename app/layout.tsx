@@ -17,6 +17,7 @@ import '@fontsource/fraunces/700.css'
 import './globals.css'
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
+import { SkipToContentLink } from '@/components/layout/skip-to-content-link'
 import { ChatWidget } from '@/components/chat/chat-widget'
 import { ServiceWorkerRegistration } from '@/components/pwa/service-worker-registration'
 import { AssessmentProvider } from '@/lib/assessment/assessment-context'
@@ -71,9 +72,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <LanguageProvider>
               <SavedSchemesProvider>
                 <AssessmentProvider>
+                  <SkipToContentLink />
+
                   <SiteHeader />
 
-                  <div className="flex-1">{children}</div>
+                  <div id="main-content" className="flex-1">{children}</div>
 
                   <SiteFooter />
 

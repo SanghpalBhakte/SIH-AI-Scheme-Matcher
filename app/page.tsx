@@ -105,7 +105,7 @@ function SectionHeader({
 }) {
   return (
     <div className="mx-auto mb-10 max-w-2xl text-center">
-      {eyebrow && <p className="text-xs font-semibold uppercase tracking-wider text-accent">{eyebrow}</p>}
+      {eyebrow && <p className="text-xs font-semibold uppercase tracking-wider text-accent-text">{eyebrow}</p>}
       <h2 className="font-display mt-2 text-2xl font-semibold text-foreground sm:text-3xl">{title}</h2>
       {subtitle && <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{subtitle}</p>}
     </div>
