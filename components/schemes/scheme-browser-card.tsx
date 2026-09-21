@@ -24,7 +24,12 @@ export function SchemeBrowserCard({ scheme }: { scheme: Scheme }) {
     <Card className="flex flex-col transition-all duration-200 hover:-translate-y-0.5 hover:shadow-elevated">
       <CardHeader className="space-y-2">
         <div className="flex items-start justify-between gap-3">
-          <div>
+          {/* min-w-0 keeps this title column shrinkable to the actual row
+              width instead of its own max-content width -- same fix as
+              institutions/page.tsx; without it a long scheme.name pushes
+              the card a few px past the viewport on the narrowest phones
+              before wrapping. */}
+          <div className="min-w-0 flex-1">
             <h3 className="text-base font-semibold leading-snug text-foreground">{scheme.name}</h3>
             {scheme.ministry && <p className="mt-0.5 text-xs text-muted-foreground">{scheme.ministry}</p>}
           </div>

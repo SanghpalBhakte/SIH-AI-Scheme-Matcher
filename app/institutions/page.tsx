@@ -71,14 +71,20 @@ export default function InstitutionsPage() {
           )}
         </Card>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((inst) => (
             <Card key={inst.officialUrl} className="flex flex-col transition-all duration-200 hover:-translate-y-0.5 hover:shadow-elevated">
               <CardHeader className="flex-row items-start gap-3 space-y-0">
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary/10">
                   <Building2 className="h-4 w-4 text-primary" aria-hidden />
                 </div>
-                <div className="space-y-1">
+                {/* min-w-0 is required here: this div is a flex sibling of the
+                    shrink-0 icon box, so without it the browser sizes it to
+                    its content's max-content width (the institution name's
+                    widest unbroken word) instead of the actual remaining
+                    row width, pushing the card wider than the viewport on
+                    phones before the long name gets a chance to wrap. */}
+                <div className="min-w-0 flex-1 space-y-1">
                   <CardTitle className="text-sm leading-snug">{inst.name}</CardTitle>
                   {inst.parentMinistry && <CardDescription className="text-xs">{inst.parentMinistry}</CardDescription>}
                 </div>

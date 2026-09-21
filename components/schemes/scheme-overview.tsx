@@ -27,7 +27,12 @@ export function SchemeOverview({ scheme }: { scheme: Scheme }) {
     <div className="space-y-4 text-sm">
       <div>
         <div className="flex items-start justify-between gap-2">
-          <p className="font-medium text-primary">{scheme.benefit}</p>
+          {/* min-w-0: same fix as the scheme-name title rows elsewhere --
+              a long benefit string (several run 60-80+ characters, e.g.
+              "Collateral-free loan up to ...") needs to be able to shrink
+              below its own content width to wrap instead of crowding out
+              the SpeakButton on narrow phones. */}
+          <p className="min-w-0 flex-1 font-medium text-primary">{scheme.benefit}</p>
           <SpeakButton text={speechText} lang={SCHEME_CONTENT_SPEECH_LANG} className="-mt-2 -mr-2" />
         </div>
         <p className="mt-1 text-muted-foreground">{scheme.summary}</p>

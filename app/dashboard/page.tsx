@@ -66,7 +66,7 @@ export default function DashboardPage() {
               {t('saved.needsProfile')}
             </p>
           )}
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {savedSchemes.map((scheme) =>
               profileComplete ? (
                 <RecommendationCard
@@ -77,7 +77,10 @@ export default function DashboardPage() {
                 <Card key={scheme.id} className="flex flex-col">
                   <CardHeader className="space-y-2">
                     <div className="flex items-start justify-between gap-3">
-                      <div>
+                      {/* min-w-0: same fix applied to every other scheme-name
+                          title row in this codebase (scheme-browser-card.tsx,
+                          recommendation-card.tsx, schemes/[id]/page.tsx). */}
+                      <div className="min-w-0 flex-1">
                         <h3 className="text-base font-semibold leading-snug text-foreground">{scheme.name}</h3>
                         {scheme.ministry && <p className="mt-0.5 text-xs text-muted-foreground">{scheme.ministry}</p>}
                       </div>

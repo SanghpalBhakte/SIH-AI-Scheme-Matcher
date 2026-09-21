@@ -23,7 +23,7 @@ export function RecommendationsSummary({
   const needsMoreInfoCount = results.filter((r) => r.missingCriteria.length > 0).length
 
   return (
-    <div className="grid gap-3 sm:grid-cols-3">
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
       <Card className="transition-all duration-200 hover:-translate-y-0.5 hover:shadow-elevated">
         <CardContent className="flex items-center gap-3 p-4">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-primary/10">

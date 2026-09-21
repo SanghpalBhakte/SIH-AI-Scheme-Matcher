@@ -81,7 +81,10 @@ export default function RecommendationsPage() {
   return (
     <main className="container flex flex-col gap-6 py-12">
       <div className="flex items-start justify-between gap-3">
-        <div className="space-y-1">
+        {/* min-w-0: defensive, same class of fix as the scheme-card title
+            rows -- the title/subtitle here are short in English but some
+            of the other 11 translated locales run noticeably longer. */}
+        <div className="min-w-0 flex-1 space-y-1">
           <h1 className="font-display text-xl font-semibold text-foreground">{t('recommendations.title')}</h1>
           <p className="text-sm text-muted-foreground">{t('recommendations.subtitle')}</p>
         </div>
@@ -104,7 +107,7 @@ export default function RecommendationsPage() {
 
       {!hasStrongMatch && <LowMatchNotice />}
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {results.map((result) => (
           <RecommendationCard key={result.scheme.id} result={result} />
         ))}

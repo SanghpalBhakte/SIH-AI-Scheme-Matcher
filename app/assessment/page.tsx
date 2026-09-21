@@ -185,7 +185,7 @@ export default function AssessmentPage() {
                     in lib/matching/types.ts) — tucking it behind the
                     <details> below keeps the fast path to three fields
                     instead of ten. */}
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div className="space-y-1.5">
                     <Label htmlFor="gender">{t('field.gender')}</Label>
                     <Select
@@ -257,7 +257,7 @@ export default function AssessmentPage() {
                         placeholder={t('field.fullNamePlaceholder')}
                       />
                     </div>
-                    <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                       <div className="space-y-1.5">
                         <Label htmlFor="age">{t('field.age')}</Label>
                         <Input
@@ -347,7 +347,7 @@ export default function AssessmentPage() {
 
             {step.id === 'business' && (
               <>
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div className="space-y-1.5">
                     <Label htmlFor="sector">{t('field.sector')}</Label>
                     <Select
@@ -431,7 +431,7 @@ export default function AssessmentPage() {
                         ))}
                       </Select>
                     </div>
-                    <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                       <div className="space-y-1.5">
                         <Label htmlFor="yearsInOperation">{t('field.yearsInOperation')}</Label>
                         <Input
@@ -453,7 +453,7 @@ export default function AssessmentPage() {
                         />
                       </div>
                     </div>
-                    <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                       <div className="space-y-1.5">
                         <Label htmlFor="annualTurnoverLakh">{t('field.annualTurnoverLakh')}</Label>
                         <Input
@@ -524,7 +524,7 @@ export default function AssessmentPage() {
                     />
                   </summary>
                   <div className="mt-4 space-y-4 border-t border-border pt-4">
-                    <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                       <div className="space-y-1.5">
                         <Label htmlFor="investmentRequiredLakh">{t('field.investmentRequiredLakh')}</Label>
                         <Input
@@ -605,7 +605,7 @@ export default function AssessmentPage() {
             {step.id === 'needs' && (
               <div className="space-y-1.5">
                 <Label>{t('field.businessNeedsLabel')}</Label>
-                <div className="grid gap-2.5 sm:grid-cols-2">
+                <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
                   {BUSINESS_NEED_OPTIONS.map((need) => (
                     <label key={need} className="flex min-h-11 items-center gap-2 py-2 text-sm text-foreground">
                       <Checkbox checked={profile.businessNeeds.includes(need)} onChange={() => toggleNeed(need)} />
@@ -648,7 +648,7 @@ export default function AssessmentPage() {
           <Sparkles className="h-4 w-4 text-accent" aria-hidden />
           {t('assessment.demoSectionTitle')}
         </div>
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           {demoProfiles.map((demo) => (
             <Card
               key={demo.id}

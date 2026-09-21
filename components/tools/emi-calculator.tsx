@@ -39,7 +39,7 @@ export function EmiCalculator() {
         <CardDescription>{t('emi.subtitle')}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="grid gap-4 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <label className="space-y-1.5 text-sm">
             <span className="block font-medium text-foreground">{t('emi.principalLabel')}</span>
             <Input
@@ -79,7 +79,7 @@ export function EmiCalculator() {
 
         {result ? (
           <div className="space-y-4 rounded-md border border-border bg-secondary/30 p-4">
-            <div className="grid gap-4 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-accent-text">{t('emi.monthlyEmi')}</p>
                 <p className="mt-1 text-lg font-bold text-foreground">{formatRupees(result.emi)}</p>

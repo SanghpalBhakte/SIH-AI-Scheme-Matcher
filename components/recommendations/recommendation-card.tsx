@@ -36,7 +36,12 @@ export function RecommendationCard({ result }: { result: SchemeMatchResult }) {
     >
       <CardHeader className="space-y-2">
         <div className="flex items-start justify-between gap-3">
-          <div>
+          {/* min-w-0: same fix as scheme-browser-card.tsx -- without it this
+              title column won't shrink below its content's natural width,
+              so a long scheme name (or a longer translated string in one
+              of the other 11 languages) pushes the match-score circle off
+              the card instead of wrapping. */}
+          <div className="min-w-0 flex-1">
             <h3 className="text-base font-semibold leading-snug text-foreground">{scheme.name}</h3>
             {scheme.ministry && <p className="mt-0.5 text-xs text-muted-foreground">{scheme.ministry}</p>}
           </div>

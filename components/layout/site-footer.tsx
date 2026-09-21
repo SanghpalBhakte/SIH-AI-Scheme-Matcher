@@ -33,7 +33,7 @@ export function SiteFooter() {
     // bottom-6 and taller viewports make this a non-issue.
     <footer className="mt-28 border-t border-border bg-secondary/30 sm:mt-0">
       <div className="container flex flex-col gap-8 py-10">
-        <div className="grid gap-8 sm:grid-cols-[1.3fr_1fr_1fr]">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-[1.3fr_1fr_1fr]">
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
               <Landmark className="h-4 w-4 text-primary" aria-hidden />

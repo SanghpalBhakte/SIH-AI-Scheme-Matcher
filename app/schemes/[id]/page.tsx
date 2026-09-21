@@ -78,7 +78,10 @@ export default function SchemeDetailsPage({ params }: { params: { id: string } }
       <Card className="mx-auto w-full max-w-2xl shadow-elevated">
         <CardHeader className="space-y-2">
           <div className="flex items-start justify-between gap-3">
-            <div>
+            {/* min-w-0: same fix as scheme-browser-card.tsx / recommendation-card.tsx --
+                keeps the title shrinkable so it wraps instead of pushing the
+                match-score circle off the card on narrow phones. */}
+            <div className="min-w-0 flex-1">
               <CardTitle className="font-display">{scheme.name}</CardTitle>
               {scheme.ministry && <CardDescription>{scheme.ministry}</CardDescription>}
             </div>
@@ -133,7 +136,7 @@ export default function SchemeDetailsPage({ params }: { params: { id: string } }
 
           <section className="space-y-3 rounded-md border border-border bg-secondary/30 p-4">
             <h2 className="text-xs font-semibold uppercase tracking-wide text-accent-text">{t('schemeDetails.quickRefTitle')}</h2>
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div className="flex items-start gap-2">
                 <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden />
                 <div>

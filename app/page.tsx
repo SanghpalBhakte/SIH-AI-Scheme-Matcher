@@ -229,7 +229,7 @@ export default function HomePage() {
             eyebrow={t('landing.trustEyebrow')}
             title={t('landing.trustSectionTitle')}
           />
-          <div className="grid gap-5 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             {WHY_CARDS.map((card) => (
               <Card key={card.titleKey} className="transition-all duration-200 hover:-translate-y-0.5 hover:shadow-elevated">
                 <CardHeader className="flex-row items-start gap-4 space-y-0">
@@ -260,7 +260,7 @@ export default function HomePage() {
               stay plain grids on purpose. A dashed thread rather than a
               solid line, echoing the hero photo's own subject (people
               who work with textiles, weaving, embroidery). */}
-          <ol className="relative grid gap-8 border-l-2 border-dashed border-accent/40 pl-9 sm:grid-cols-3 sm:gap-x-6 sm:border-l-0 sm:border-t-2 sm:pl-0 sm:pt-9">
+          <ol className="relative grid grid-cols-1 gap-8 border-l-2 border-dashed border-accent/40 pl-9 sm:grid-cols-3 sm:gap-x-6 sm:border-l-0 sm:border-t-2 sm:pl-0 sm:pt-9">
             {STEPS.map((step, i) => (
               <li key={step.titleKey} className="relative sm:text-center">
                 <div className="absolute -left-[42px] top-0 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-accent bg-background font-display text-sm font-semibold text-accent shadow-soft sm:-top-[38px] sm:left-1/2 sm:-translate-x-1/2">
@@ -305,7 +305,7 @@ export default function HomePage() {
       <section className="border-y border-border bg-secondary/30 py-16 sm:py-20">
         <div className="container">
           <SectionHeader eyebrow={t('landing.featuresEyebrow')} title={t('landing.featuresTitle')} />
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {FEATURES.map((feature) => (
               <Card
                 key={feature.titleKey}
@@ -333,7 +333,7 @@ export default function HomePage() {
             title={t('landing.whyTitle')}
             subtitle={t('landing.whySubtitle')}
           />
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {WHY_DIFF.map((item) => (
               <Card
                 key={item.titleKey}
