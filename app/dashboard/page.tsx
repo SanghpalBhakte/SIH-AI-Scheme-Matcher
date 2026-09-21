@@ -74,7 +74,7 @@ export default function DashboardPage() {
                   result={evaluateScheme({ ...profile, specialGroups: deriveSpecialGroups(profile) }, scheme)}
                 />
               ) : (
-                <Card key={scheme.id} className="flex flex-col">
+                <Card key={scheme.id} className="flex flex-col transition-all duration-200 hover:-translate-y-0.5 hover:shadow-elevated">
                   <CardHeader className="space-y-2">
                     <div className="flex items-start justify-between gap-3">
                       {/* min-w-0: same fix applied to every other scheme-name
