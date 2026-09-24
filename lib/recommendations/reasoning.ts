@@ -166,6 +166,10 @@ export function deriveVerificationNotes(result: SchemeMatchResult, scheme: Schem
   if (scheme.additionalEligibleGroups && scheme.additionalEligibleGroups.length > 0) {
     notes.add('categoryAndLocal')
   }
+  // Same reason: eligibility rests on a self-declared group (e.g. PwD).
+  if (scheme.requiredSpecialGroups && scheme.requiredSpecialGroups.length > 0) {
+    notes.add('categoryAndLocal')
+  }
   if (!isNationwide(scheme.states)) {
     notes.add('categoryAndLocal')
   }

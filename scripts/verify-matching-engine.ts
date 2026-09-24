@@ -7,7 +7,7 @@
 
 import { evaluateScheme, matchSchemes } from '../lib/matching/engine'
 import type { Scheme } from '../lib/matching/types'
-import { CATEGORY_OPTIONS, GENDER_OPTIONS } from '../lib/matching/types'
+import { CATEGORY_OPTIONS, GENDER_OPTIONS, toEngineProfile } from '../lib/matching/types'
 import { schemes } from '../data/schemes'
 import { demoProfiles } from '../data/demoProfiles'
 import { TOTAL_WEIGHT } from '../lib/matching/weights'
@@ -490,6 +490,57 @@ console.log('\n=== Direct check: Stand-Up India is "SC/ST and/or women" (2026-09
       'describeAudience() tells users Stand-Up India is open to women of any category'
     )
   }
+}
+
+console.log('\n=== Direct check: NDFDC is only for persons with disabilities (2026-09-24 scan) ===')
+{
+  const ndfdc = schemes.find((s) => s.id === 'ndfdc-disability')
+  assert(!!ndfdc, 'ndfdc-disability exists in the dataset')
+  if (ndfdc) {
+    const base = {
+      category: 'General' as const,
+      gender: 'Woman' as const,
+      state: 'Bihar',
+      sector: 'Trading',
+      stage: 'Idea' as const,
+      firstTimeEntrepreneur: false,
+      annualIncomeRange: '' as const,
+      minorityStatus: '' as const,
+    }
+    const yes = evaluateScheme(toEngineProfile({ ...base, disabilityStatus: 'Yes' }), ndfdc)
+    assert(
+      yes.matchedCriteria.some((c) => c.key === 'category' && c.label.includes('persons with disabilities')) &&
+        yes.eligibilityStatus === 'Likely Eligible',
+      `an applicant who answered Yes to disability is Likely Eligible for NDFDC (got ${yes.eligibilityStatus})`
+    )
+    const no = evaluateScheme(toEngineProfile({ ...base, disabilityStatus: 'No' }), ndfdc)
+    assert(
+      no.failedCriteria.some((c) => c.key === 'category') && no.eligibilityStatus === 'Low Match',
+      `an applicant who answered No to disability hard-fails NDFDC (got ${no.eligibilityStatus})`
+    )
+    const unanswered = evaluateScheme(toEngineProfile({ ...base, disabilityStatus: '' }), ndfdc)
+    assert(
+      unanswered.missingCriteria.some((c) => c.key === 'category') &&
+        unanswered.eligibilityStatus === 'Insufficient Information',
+      `an applicant who skipped the disability question gets "Insufficient Information", never an assumed yes/no (got ${unanswered.eligibilityStatus})`
+    )
+    const bare = evaluateScheme({ ...base }, ndfdc)
+    assert(bare.eligibilityStatus !== 'Likely Eligible', 'a profile with no special-group info at all (e.g. a demo profile) is never "Likely Eligible" for NDFDC')
+    assert(
+      describeAudience(ndfdc).some((line) => line.includes('Only for persons with disabilities')),
+      'describeAudience() says NDFDC is only for persons with disabilities'
+    )
+    for (const r of [yes, no, unanswered]) {
+      assert(r.matchedCriteria.length + r.missingCriteria.length + r.failedCriteria.length === 7, 'the PwD gate keeps exactly 7 criteria')
+    }
+  }
+  // Delhi's OR rule (additionalEligibleGroups) must be untouched by the new AND gate.
+  const delhi = schemes.find((s) => s.id === 'delhi-composite-loan-scheme')!
+  const delhiPwd = evaluateScheme(
+    toEngineProfile({ category: 'General', gender: 'Man', state: 'Delhi', sector: 'Services', stage: 'Early', firstTimeEntrepreneur: true, annualIncomeRange: 'below-1l', disabilityStatus: 'Yes', minorityStatus: 'No' }),
+    delhi
+  )
+  assert(delhiPwd.matchedCriteria.some((c) => c.key === 'category'), 'Delhi Composite Loan still matches a General-category PwD applicant (OR rule intact)')
 }
 
 console.log(failures === 0 ? '\nAll checks passed.' : `\n${failures} check(s) FAILED.`)

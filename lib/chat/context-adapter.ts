@@ -6,7 +6,7 @@
 // pure function that's easy to reason about and test.
 
 import type { DraftEntrepreneurProfile, EntrepreneurProfile, Scheme, SchemeMatchResult } from '@/lib/matching/types'
-import { deriveSpecialGroups, isProfileComplete } from '@/lib/matching/types'
+import { isProfileComplete, toEngineProfile } from '@/lib/matching/types'
 import { matchSchemes } from '@/lib/matching/engine'
 
 export interface ChatAppContext {
@@ -32,7 +32,7 @@ export function buildChatContext(params: {
   // a variable first would lose that narrowing.
   let completeProfile: EntrepreneurProfile | null = null
   if (isHydrated && isProfileComplete(profile)) {
-    completeProfile = { ...profile, specialGroups: deriveSpecialGroups(profile) }
+    completeProfile = toEngineProfile(profile)
   }
 
   const recommendations = completeProfile ? matchSchemes(completeProfile, schemes) : null

@@ -23,7 +23,7 @@ import { useAssessment } from '@/lib/assessment/assessment-context'
 import { useLanguage } from '@/lib/i18n/language-context'
 import { evaluateScheme } from '@/lib/matching/engine'
 import { useSchemes } from '@/lib/schemes/live-schemes'
-import { deriveSpecialGroups, isProfileComplete } from '@/lib/matching/types'
+import { isProfileComplete, toEngineProfile } from '@/lib/matching/types'
 import { getInstitutionForScheme } from '@/lib/institutions/directory'
 import { isLoanBased } from '@/lib/finance/emi'
 
@@ -62,7 +62,7 @@ export default function SchemeDetailsPage({ params }: { params: { id: string } }
   // lib/matching/types.ts's isProfileComplete for what "complete"
   // means (the 6 hard-required fields; income stays optional).
   const profileComplete = isHydrated && isProfileComplete(profile)
-  const result = profileComplete ? evaluateScheme({ ...profile, specialGroups: deriveSpecialGroups(profile) }, scheme) : null
+  const result = profileComplete ? evaluateScheme(toEngineProfile(profile), scheme) : null
   const institution = getInstitutionForScheme(scheme.id)
   const loanBased = isLoanBased(scheme)
 

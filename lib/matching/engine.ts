@@ -11,6 +11,7 @@ import type {
   Gender,
   Scheme,
   SchemeMatchResult,
+  SpecialGroup,
 } from './types'
 import { INCOME_RANGE_OPTIONS } from './types'
 import { INSUFFICIENT_INFO_MISSING_SHARE, MATCH_WEIGHTS, SCORE_THRESHOLDS, TOTAL_WEIGHT } from './weights'
@@ -22,6 +23,15 @@ function isOpen(list: string[]) {
 }
 
 const GENDER_PLURAL: Record<Gender, string> = { Woman: 'women', Man: 'men', Transgender: 'transgender' }
+
+const SPECIAL_GROUP_AUDIENCE: Record<SpecialGroup, string> = {
+  PwD: 'persons with disabilities (PwD)',
+  Minority: 'minority-community applicants',
+}
+const SPECIAL_GROUP_QUESTION: Record<SpecialGroup, string> = {
+  PwD: 'disability status',
+  Minority: 'minority status',
+}
 
 function incomeLakh(profile: EntrepreneurProfile): number | null {
   return INCOME_RANGE_OPTIONS.find((o) => o.value === profile.annualIncomeRange)?.representativeLakh ?? null
@@ -98,6 +108,26 @@ export function evaluateScheme(profile: EntrepreneurProfile, scheme: Scheme): Sc
           (scheme.additionalEligibleGroups?.length ? " and didn't indicate any of the additional eligible groups" : '')
       )
     )
+  }
+
+  // --- required special group (AND gate, folded into 'category') ---
+  // Kept inside the single 'category' criterion so every scheme still
+  // has exactly 7 criteria. Only tightens a category that already
+  // passed — it never turns a failed category into a match.
+  const required = scheme.requiredSpecialGroups ?? []
+  const categoryIndex = results.findIndex((r) => r.key === 'category')
+  if (required.length > 0 && results[categoryIndex].outcome === 'matched') {
+    const audience = required.map((g) => SPECIAL_GROUP_AUDIENCE[g]).join(' or ')
+    const held = required.filter((g) => profile.specialGroups?.includes(g))
+    const allDeclined = required.every((g) => profile.declinedSpecialGroups?.includes(g))
+    if (held.length > 0) {
+      results[categoryIndex] = evaluateCriterion('category', 'matched', `Designed for ${audience}, which matches your profile`)
+    } else if (allDeclined) {
+      results[categoryIndex] = evaluateCriterion('category', 'failed', `Only for ${audience} — your answers say this doesn't apply to you`)
+    } else {
+      const questions = required.map((g) => SPECIAL_GROUP_QUESTION[g]).join('/')
+      results[categoryIndex] = evaluateCriterion('category', 'missing', `This scheme is only for ${audience} — ${questions} not provided`)
+    }
   }
 
   // --- gender ---

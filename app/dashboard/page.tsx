@@ -13,7 +13,7 @@ import { useSavedSchemes } from '@/lib/schemes/saved-schemes-context'
 import { useLanguage } from '@/lib/i18n/language-context'
 import { evaluateScheme } from '@/lib/matching/engine'
 import { useSchemes } from '@/lib/schemes/live-schemes'
-import { deriveSpecialGroups, isProfileComplete } from '@/lib/matching/types'
+import { isProfileComplete, toEngineProfile } from '@/lib/matching/types'
 
 // Saved schemes now live here (this route was a deliberate
 // placeholder before). With a complete profile, a saved scheme gets
@@ -71,7 +71,7 @@ export default function DashboardPage() {
               profileComplete ? (
                 <RecommendationCard
                   key={scheme.id}
-                  result={evaluateScheme({ ...profile, specialGroups: deriveSpecialGroups(profile) }, scheme)}
+                  result={evaluateScheme(toEngineProfile(profile), scheme)}
                 />
               ) : (
                 <Card key={scheme.id} className="flex flex-col transition-all duration-200 hover:-translate-y-0.5 hover:shadow-elevated">

@@ -23,6 +23,13 @@ export function describeAudience(scheme: Scheme): string[] {
               .map((g) => ({ Woman: 'women', Man: 'men', Transgender: 'transgender' })[g])
               .join('/')} entrepreneurs of any category`
           : `Primarily for ${scheme.categories.join(', ')} entrepreneurs`,
+    ...(scheme.requiredSpecialGroups?.length
+      ? [
+          `Only for ${scheme.requiredSpecialGroups
+            .map((g) => ({ PwD: 'persons with disabilities (PwD)', Minority: 'minority-community applicants' })[g])
+            .join(' or ')}`,
+        ]
+      : []),
     isOpen(scheme.genders) ? 'Open to all genders' : `Focused on ${scheme.genders.join('/')} entrepreneurs`,
     isOpen(scheme.states) ? 'Available nationwide' : `Available in: ${scheme.states.join(', ')}`,
     isOpen(scheme.sectors)

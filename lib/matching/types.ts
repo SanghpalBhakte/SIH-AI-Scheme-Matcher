@@ -67,8 +67,9 @@ export interface EntrepreneurProfile {
    * relevant only to schemes that define eligibility via
    * `Scheme.additionalEligibleGroups` alongside `categories`. Optional
    * and backward-compatible: omitted/undefined means "none indicated,"
-   * never a negative claim, and a scheme with no
-   * `additionalEligibleGroups` never reads this field at all — so every
+   * never a negative claim, and a scheme with neither
+   * `additionalEligibleGroups` nor `requiredSpecialGroups` never reads
+   * this field at all — so every
    * existing caller that doesn't set it (all 3 demo profiles, every
    * existing test fixture) behaves exactly as before. Use
    * `deriveSpecialGroups()` to build this from the assessment's
@@ -76,6 +77,13 @@ export interface EntrepreneurProfile {
    * by hand.
    */
   specialGroups?: SpecialGroup[]
+  /**
+   * Special groups the applicant explicitly said do NOT apply to them
+   * (answered "No"). Lets a scheme with `requiredSpecialGroups` tell
+   * "said no" (a real fail) apart from "didn't answer" (missing info,
+   * never an assumed no). Build with `deriveDeclinedSpecialGroups()`.
+   */
+  declinedSpecialGroups?: SpecialGroup[]
 }
 
 /**
@@ -193,10 +201,8 @@ export function isProfileComplete(draft: DraftEntrepreneurProfile): draft is Com
  * Yes/No intake questions. `'Yes'` is the only value that adds a group;
  * `''` (not answered) and `'No'` both mean "not indicated" — same
  * honest-by-default rule as every other optional field in this file,
- * never assumed. Callers spread this into the object passed to
- * `matchSchemes`/`evaluateScheme` — see app/recommendations/page.tsx,
- * app/dashboard/page.tsx, and lib/chat/context-adapter.ts for the 3
- * call sites that do this today.
+ * never assumed. App code should call `toEngineProfile()` (below),
+ * which applies this plus `deriveDeclinedSpecialGroups()`.
  */
 export function deriveSpecialGroups(profile: {
   disabilityStatus: YesNo | ''
@@ -206,6 +212,28 @@ export function deriveSpecialGroups(profile: {
   if (profile.minorityStatus === 'Yes') groups.push('Minority')
   if (profile.disabilityStatus === 'Yes') groups.push('PwD')
   return groups
+}
+
+/** Groups explicitly answered "No" — `''` (not answered) is never treated as a no. */
+export function deriveDeclinedSpecialGroups(profile: {
+  disabilityStatus: YesNo | ''
+  minorityStatus: YesNo | ''
+}): SpecialGroup[] {
+  const groups: SpecialGroup[] = []
+  if (profile.minorityStatus === 'No') groups.push('Minority')
+  if (profile.disabilityStatus === 'No') groups.push('PwD')
+  return groups
+}
+
+/**
+ * The one way the app turns a complete assessment into the engine's
+ * input — every scoring call site (recommendations, dashboard, scheme
+ * details, chat) goes through this so none can forget a derived field.
+ */
+export function toEngineProfile<P extends EntrepreneurProfile & { disabilityStatus: YesNo | ''; minorityStatus: YesNo | '' }>(
+  profile: P
+): P {
+  return { ...profile, specialGroups: deriveSpecialGroups(profile), declinedSpecialGroups: deriveDeclinedSpecialGroups(profile) }
 }
 
 /**
@@ -253,6 +281,15 @@ export interface Scheme {
    * the engine compares it to `profile.category`.
    */
   additionalEligibleGenders?: Gender[]
+  /**
+   * Special groups an applicant MUST belong to (at least one) — an AND
+   * on top of the category criterion, unlike the OR of
+   * `additionalEligibleGroups`. For schemes that exist only for that
+   * group, e.g. NDFDC loans: "Any Indian citizen with 40% or more
+   * disability". Applicant said "No" → hard fail; didn't answer →
+   * missing information (never an assumed no).
+   */
+  requiredSpecialGroups?: SpecialGroup[]
   /** Genders this scheme targets, or ['Any'] if unrestricted. */
   genders: string[]
   /** States this scheme is available in, or ['All'] if nationwide. */

@@ -542,18 +542,13 @@ export const schemes: Scheme[] = [
     stages: ['Idea', 'Early', 'Growth'],
     firstTimeOnly: false,
     maxIncomeLakh: null,
-    // NOT YET UPDATED (flagged in the 2026-09-02 audit): the engine can
-    // now score disability status via SpecialGroup='PwD' /
-    // additionalEligibleGroups (see lib/matching/types.ts), added for
-    // the Delhi Composite Loan Scheme. This corporation's own real
-    // eligibility criterion IS disability status — but this record was
-    // deliberately left at categories: ['Any'] rather than adding
-    // additionalEligibleGroups: ['PwD'] here, because doing so would
-    // need a fresh check of the official source to confirm disability
-    // status is a strict eligibility gate (not just the corporation's
-    // target audience) before encoding it as one. Left open to all
-    // categories, honestly, until that check is done — never
-    // mis-encoded onto a field that doesn't fit in the meantime.
+    // Disability IS a strict eligibility gate (checked 2026-09-24):
+    // NDFDC's own self-loan FAQ — "Any Indian Citizen with 40% or more
+    // disability", minimum age 18, "no economic criteria"
+    // (admin.ndfdcloanaccount.co.in/web-asset/pdf/faqs/FAQs_SelfLoan.pdf).
+    // Before this, the record was open to everyone and was recommended
+    // at 100% to applicants who never indicated a disability.
+    requiredSpecialGroups: ['PwD'],
     benefit: 'Concessional-rate loans for self-employment ventures',
     summary:
       'Formerly the National Handicapped Finance & Development Corporation (NHFDC) — concessional loans and skill-training support for persons with disabilities starting or expanding a self-employment venture.',
