@@ -61,6 +61,9 @@ export function SiteHeader() {
       <div className="container flex h-16 items-center justify-between gap-4">
         <Link
           href="/"
+          // Below `sm` only the icon shows — without this the link has no
+          // accessible name for screen readers (axe: link-name).
+          aria-label={`SchemeSetu — ${t('nav.home')}`}
           onClick={(e) => guardNavigation(e, '/')}
           // -m-2/p-2 grows the tap target to ~36px without shifting
           // layout (the negative margin exactly cancels the padding on

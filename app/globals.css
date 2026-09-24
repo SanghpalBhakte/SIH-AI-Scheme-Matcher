@@ -68,7 +68,10 @@
     --success: 165 60% 32%;
     --success-foreground: 0 0% 100%;
 
-    --warning: 32 88% 40%;
+    /* 34% (was 40%): warning-coloured text now clears WCAG AA 4.5:1 on
+       cards (5.1:1) and the page background (4.8:1); white text on
+       warning badges improves from 3.9:1 to 5.1:1. */
+    --warning: 32 88% 34%;
     --warning-foreground: 0 0% 100%;
 
     --border: 36 18% 87%;

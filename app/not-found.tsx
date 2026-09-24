@@ -26,7 +26,7 @@ export default function NotFound() {
             <Compass className="h-5 w-5 text-muted-foreground" aria-hidden />
           </div>
           <div className="space-y-1.5">
-            <p className="text-lg font-semibold text-foreground">{t('notFound.title')}</p>
+            <h1 className="text-lg font-semibold text-foreground">{t('notFound.title')}</h1>
             <p className="max-w-sm text-sm text-muted-foreground">{t('notFound.body')}</p>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-3 pt-1">

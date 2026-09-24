@@ -5,7 +5,7 @@ import { ArrowLeft, FileText, MapPin, Building2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { DisclaimerBanner } from '@/components/layout/disclaimer-banner'
 import { EligibilityStatusBadge } from '@/components/recommendations/eligibility-status-badge'
@@ -41,7 +41,7 @@ export default function SchemeDetailsPage({ params }: { params: { id: string } }
   if (!scheme) {
     return (
       <main className="container flex min-h-[50vh] flex-col items-center justify-center gap-4 py-16 text-center">
-        <p className="text-lg font-semibold text-foreground">{t('schemeDetails.notFoundTitle')}</p>
+        <h1 className="text-lg font-semibold text-foreground">{t('schemeDetails.notFoundTitle')}</h1>
         <p className="max-w-sm text-sm text-muted-foreground">{t('schemeDetails.notFoundBody')}</p>
         <Button variant="outline" size="sm" asChild>
           <Link href="/recommendations">
@@ -82,7 +82,8 @@ export default function SchemeDetailsPage({ params }: { params: { id: string } }
                 keeps the title shrinkable so it wraps instead of pushing the
                 match-score circle off the card on narrow phones. */}
             <div className="min-w-0 flex-1">
-              <CardTitle className="font-display">{scheme.name}</CardTitle>
+              {/* The page's one h1 (CardTitle renders an h3). Same classes as CardTitle. */}
+              <h1 className="font-display text-lg font-semibold leading-none tracking-tight">{scheme.name}</h1>
               {scheme.ministry && <CardDescription>{scheme.ministry}</CardDescription>}
             </div>
             {result && (
