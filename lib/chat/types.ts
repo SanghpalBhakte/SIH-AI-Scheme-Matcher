@@ -25,6 +25,7 @@ export type IntentId =
   | 'scheme_explanation'
   | 'scheme_benefits'
   | 'scheme_eligibility'
+  | 'personal_eligibility'
   | 'required_documents'
   | 'application_steps'
   | 'next_action'

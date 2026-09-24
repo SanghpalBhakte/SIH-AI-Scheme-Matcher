@@ -75,6 +75,15 @@ const INTENT_CASES: [string, string][] = [
   ['what should I do next?', 'next_action'],
   ['help', 'general_help'],
   ['what is the weather today', 'unknown'],
+  // 2026-09-24: yes/no questions about ONE scheme
+  ['Am I eligible for this scheme?', 'personal_eligibility'],
+  ['am i eligible for pmegp', 'personal_eligibility'],
+  ['Do I qualify for Stand-Up India?', 'personal_eligibility'],
+  ['Can I apply for this?', 'personal_eligibility'],
+  ['Is this scheme right for me?', 'personal_eligibility'],
+  ['which schemes do I qualify for?', 'eligible_schemes'],
+  ['what do I qualify for?', 'eligible_schemes'],
+  ['how can I apply?', 'application_steps'],
 ]
 for (const [text, expected] of INTENT_CASES) {
   assert(classifyIntent(text) === expected, `"${text}" -> ${expected}`)
@@ -188,6 +197,34 @@ console.log('\n=== answerQuery: no active scheme -> graceful prompt ===')
 {
   const answer = answerQuery('how do I apply?', NO_PROFILE_CONTEXT, EMPTY_SESSION, schemes)
   assert(/not sure which scheme/i.test(answer.text), 'asks which scheme instead of guessing')
+}
+
+console.log('\n=== answerQuery: "am I eligible for this scheme?" (2026-09-24) ===')
+{
+  const onPage = (profile: DraftEntrepreneurProfile, schemeId: string) => ({
+    ...buildChatContext({ profile, isHydrated: true, pathname: `/schemes/${schemeId}`, schemes }),
+  })
+  const artisan = draftFrom(demoProfiles.find((d) => d.id === 'rural-first-time-artisan')!.profile)
+
+  const yes = answerQuery('Am I eligible for this scheme?', onPage(artisan, standUp.id), EMPTY_SESSION, schemes)
+  assert(yes.text.startsWith(`${standUp.name}: Yes, you look likely eligible`), `eligible applicant on the Stand-Up India page gets a clear "yes" (got: ${yes.text.slice(0, 80)}…)`)
+  assert(/not an official decision/i.test(yes.text), 'the "yes" is caveated as a rule-based check')
+  assert(!!yes.actions?.some((a) => a.href === `/schemes/${standUp.id}`), 'links to the full explanation')
+
+  const man = { ...artisan, category: 'General' as const, gender: 'Man' as const }
+  const no = answerQuery('am I eligible for stand-up india?', onPage(man, pmegp.id), EMPTY_SESSION, schemes)
+  assert(no.text.startsWith(`${standUp.name}: Probably not`), 'a named scheme wins over the open page, and a General man gets "probably not" for Stand-Up India')
+  assert(/women of any category/i.test(no.text), 'the "no" gives the real reason from the engine')
+
+  const ndfdc = schemes.find((s) => s.id === 'ndfdc-disability')!
+  const unknown = answerQuery('do I qualify for this?', onPage(artisan, ndfdc.id), EMPTY_SESSION, schemes)
+  assert(/can't tell yet/i.test(unknown.text) && /disability status not provided/i.test(unknown.text), 'missing disability answer on NDFDC -> "can\'t tell yet" + what is missing')
+
+  const noProfile = answerQuery('Am I eligible for this scheme?', { ...NO_PROFILE_CONTEXT, selectedScheme: standUp }, EMPTY_SESSION, schemes)
+  assert(!!noProfile.actions?.some((a) => a.href === '/assessment'), 'no profile -> asks to complete the assessment')
+
+  const noScheme = answerQuery('am I eligible?', buildChatContext({ profile: artisan, isHydrated: true, pathname: '/', schemes }), EMPTY_SESSION, schemes)
+  assert(/good fit/i.test(noScheme.text) && noScheme.nextSession.lastIntent === 'eligible_schemes', 'no scheme in play -> answered as "which schemes am I eligible for", not "which scheme do you mean?"')
 }
 
 console.log('\n=== answerQuery: unknown/unclear question -> exact fallback ===')

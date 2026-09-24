@@ -30,8 +30,19 @@ const PATTERNS: { intent: IntentId; test: RegExp }[] = [
     test: /eligib\w*\s+criteria|who (can|is) eligible|requirements? (for|of)|criteria for/i,
   },
   {
+    // Lists: "what schemes am I eligible for", "which schemes…". Plural or
+    // "what/which" phrasing only — "do I qualify for PMEGP?" and "is this
+    // scheme for me?" are about ONE scheme and go to personal_eligibility.
     intent: 'eligible_schemes',
-    test: /what.*(am i|schemes).*eligible|which schemes|eligible schemes|schemes?.*(for me|match me)|qualify for|my (matches|recommendations)/i,
+    test: /what.*(am i|schemes).*eligible|which schemes|eligible schemes|\bschemes\b.*(for me|match me)|\b(any|which|what)\s+schemes?\b.*(for me|match me)|(what|which|anything).{0,20}qualify for|my (matches|recommendations)/i,
+  },
+  {
+    // "Am I eligible for this scheme?", "do I qualify for PMEGP?", "can I
+    // apply for it?", "is this scheme for me?" — a yes/no check of ONE
+    // scheme against the user's profile. With no scheme in play the engine
+    // answers it like eligible_schemes instead.
+    intent: 'personal_eligibility',
+    test: /\b(am i|are we)\s+(eligible|qualified)\b|\bdo i (qualify|fit|meet)\b|\bcan i (apply|get|avail|take)\b|\b(is|would) (this|it|that|the scheme)\b.{0,25}\b(for me|suit me|right for me|suitable)\b|\b(eligible|qualify)\b.{0,25}\b(this|it|that)\b/i,
   },
   {
     // Deliberately NOT matching a bare "what is …" — that phrasing is

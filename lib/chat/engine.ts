@@ -16,6 +16,8 @@
 import type { Scheme } from '@/lib/matching/types'
 import { evaluateScheme } from '@/lib/matching/engine'
 import { summarizeMatch } from '@/lib/recommendations/explain'
+import { deriveMatchReasons } from '@/lib/recommendations/reasoning'
+import type { SchemeMatchResult } from '@/lib/matching/types'
 import { describeAudience } from '@/lib/schemes/describe-audience'
 import { GENERIC_CHECKLIST_STEPS } from '@/lib/schemes/checklist'
 import type { ChatAppContext } from './context-adapter'
@@ -31,6 +33,38 @@ export interface ChatAnswer {
   text: string
   actions?: ChatAction[]
   nextSession: ChatSession
+}
+
+function lowercaseFirst(text: string): string {
+  return text.length === 0 ? text : text[0].toLowerCase() + text.slice(1)
+}
+
+/**
+ * A direct yes / possibly / not-yet / probably-not answer to "am I
+ * eligible for this scheme?", worded straight from the engine's own
+ * criterion labels (never invented) and never claiming more certainty
+ * than eligibilityStatus has.
+ */
+function eligibilityVerdict(result: SchemeMatchResult): string {
+  const reasons = deriveMatchReasons(result).slice(0, 2).map(lowercaseFirst).join('; ')
+  const failed = result.failedCriteria.map((c) => lowercaseFirst(c.label)).join('; ')
+  const missing = result.missingCriteria.map((c) => lowercaseFirst(c.label)).join('; ')
+  const score = `${result.matchScore}% match`
+  switch (result.eligibilityStatus) {
+    case 'Likely Eligible':
+      return (
+        `Yes, you look likely eligible (${score}) — ${reasons}.` +
+        (failed ? ` One thing doesn't line up: ${failed}.` : '') +
+        " This is a rule-based check, not an official decision; final approval depends on the scheme's own verification."
+      )
+    case 'Possibly Eligible':
+      return `Possibly (${score}) — ${reasons}. But not everything lines up: ${failed}. Check the official rules before applying.`
+    case 'Insufficient Information':
+      return `I can't tell yet (${score} on what I know) — ${result.missingCriteria.length === 1 ? 'one detail is' : 'some details are'} missing: ${missing}. Add it in the assessment and ask again.`
+    case 'Low Match':
+    default:
+      return `Probably not, based on your profile (${score}): ${failed || missing}. The Recommendations page shows schemes that fit you better.`
+  }
 }
 
 function askWhichScheme(schemes: Scheme[]): string {
@@ -91,8 +125,12 @@ export function answerQuery(rawInput: string, context: ChatAppContext, session: 
     }
   }
 
-  const intent = classifyIntent(input)
+  const classified = classifyIntent(input)
   const activeScheme = resolveActiveScheme(input, context, session, schemes)
+  // "Am I eligible?" with no scheme named, open or remembered is really
+  // "which schemes am I eligible for?" — answer it that way, never with
+  // "which scheme do you mean?".
+  const intent = classified === 'personal_eligibility' && !activeScheme ? 'eligible_schemes' : classified
 
   let nextSession: ChatSession = { ...session, lastIntent: intent }
   if (activeScheme) nextSession = { ...nextSession, lastSchemeId: activeScheme.id }
@@ -153,6 +191,23 @@ export function answerQuery(rawInput: string, context: ChatAppContext, session: 
       const result = evaluateScheme(context.completeProfile, activeScheme)
       return {
         text: `${activeScheme.name}: ${summarizeMatch(result)}`,
+        actions: schemeActions(activeScheme, 'View full explanation'),
+        nextSession,
+      }
+    }
+
+    case 'personal_eligibility': {
+      if (!activeScheme) return { text: askWhichScheme(schemes), nextSession } // unreachable, see `intent` above
+      if (!context.completeProfile) {
+        return {
+          text: `I can check whether you're eligible for ${activeScheme.name} once your profile is complete — finish the assessment first (it takes a few minutes).`,
+          actions: [{ label: 'Complete assessment', href: '/assessment' }],
+          nextSession,
+        }
+      }
+      const result = evaluateScheme(context.completeProfile, activeScheme)
+      return {
+        text: `${activeScheme.name}: ${eligibilityVerdict(result)}`,
         actions: schemeActions(activeScheme, 'View full explanation'),
         nextSession,
       }
@@ -259,7 +314,7 @@ export function answerQuery(rawInput: string, context: ChatAppContext, session: 
     case 'general_help':
       return {
         text:
-          'I can help you understand government schemes — ask me things like "what schemes am I eligible for", ' +
+          'I can help you understand government schemes — ask me things like "what schemes am I eligible for", "am I eligible for this scheme", ' +
           '"why was this scheme recommended", "what documents do I need", or "how do I apply". ' +
           "I only use information already in this app, so I'll say when something isn't in the dataset.",
         actions: [{ label: 'Browse all schemes', href: '/schemes' }],

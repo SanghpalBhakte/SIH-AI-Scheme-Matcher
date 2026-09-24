@@ -20,7 +20,7 @@ export function getQuickSuggestions(context: ChatAppContext, _session: ChatSessi
   }
 
   if (context.selectedScheme) {
-    return ['Why was this scheme recommended?', 'Explain this scheme', 'What documents do I need?', 'How do I apply?']
+    return ['Am I eligible for this scheme?', 'Why was this scheme recommended?', 'Explain this scheme', 'What documents do I need?', 'How do I apply?']
   }
 
   if (context.recommendations && context.recommendations.length > 0) {
