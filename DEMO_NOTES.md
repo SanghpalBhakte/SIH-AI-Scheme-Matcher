@@ -47,29 +47,49 @@ this profile → View details).
   itself still exists (direct URL only) and its copy was also softened in case anyone
   lands on it that way.
 
+## What changed on 2026-09-24 (matching fixes — know these if a judge probes)
+
+- **Stand-Up India now matches women of any category.** The official rule is "SC/ST
+  and/or woman entrepreneurs". Before, a General/OBC woman was wrongly shown "Low
+  Match". Good live check: a General-category woman sees it as "Likely Eligible".
+- **NDFDC (disability loans) is only shown as eligible to persons with disabilities.**
+  NDFDC's own FAQ: "Any Indian Citizen with 40% or more disability". If the disability
+  question is skipped it says "Insufficient Information" instead of guessing.
+- **Ranking rule (one sentence for judges):** "Schemes you pass every hard rule for
+  always rank above ones you fail; then by match score; when scores tie, your own
+  state's scheme comes first, then schemes built for your group." Before this, state
+  schemes (e.g. Bihar MMUY, Maharashtra CMEGP) never reached the top 3.
+- **Privacy note on step 1 of the assessment.** Answers are saved in the browser (plus
+  a private backup if Supabase is configured); backups are sent once typing pauses,
+  not on every keystroke, and "Start over" deletes the backup too.
+- **Chat answers "Am I eligible for this scheme?"** (also "do I qualify for PMEGP?",
+  "can I apply for this?"). On a scheme page it gives a yes / possibly / can't tell
+  yet / probably not answer with the engine's reasons, and there's a matching
+  suggestion chip. Nice live moment after "View details".
+- **Current demo top 3s:** rural first-time artisan → Stand-Up India, TREAD, DAY-NRLM ·
+  urban tech founder → MUDRA Tarun, Startup India Seed Fund, MUDRA Kishore · ST agri
+  entrepreneur (Odisha) → Mission Shakti, NSTFDC Term Loan, DAY-NRLM.
+
 ## Known, intentional limitations (say these proactively if asked)
 
-- **Checklist progress isn't saved.** Checking off steps on a scheme's application
-  checklist is session-only by design — a refresh resets it. The assessment profile
-  itself *does* persist across refresh (localStorage), so don't confuse the two if a
-  judge asks "does this save my progress?" — the answer is "the assessment does, the
-  checklist doesn't yet."
+- **Progress is saved in this browser.** Both the assessment and each scheme's
+  application checklist persist across refresh (localStorage). A cloud backup only
+  exists if Supabase is configured.
 - **The disclaimer banner appears twice per page** (once inline near the top of
   content, once in the site footer). This is deliberate, not a bug — the inline one is
   contextual, the footer one is a persistent, unmissable baseline.
-- **Two components in `components/schemes/` — `application-readiness.tsx` and
-  `next-actions.tsx` — are unused.** They were superseded by `application-checklist.tsx`
-  in an earlier phase and were left in place rather than deleted (not wired into any
-  route, so they don't affect the demo, but worth knowing they're dead code if someone
-  goes looking). Same for `data/applicationGuidance.ts`, which nothing currently
-  imports.
-- **Only 4 of the 13 schemes are enriched with real, sourced application steps/**
-  **documents** (Stand-Up India, PM SVANidhi, PM Vishwakarma, Startup India Seed Fund).
-  The other 9 still show an honest "not catalogued yet, check the official source"
-  fallback rather than inventing content — don't be surprised if a judge picks an
-  unenriched scheme and sees the fallback text; that's correct, not broken. This is why
-  the recommended demo profile (rural first-time artisan) is chosen deliberately: its
-  top matches lean toward the enriched schemes.
+- **Unused code:** `components/schemes/next-actions.tsx` and
+  `data/applicationGuidance.ts` aren't imported anywhere (superseded by
+  `application-checklist.tsx`). They don't affect the demo.
+- **23 of the 34 schemes list real, sourced documents and/or application steps**; 5 have
+  full step-by-step guides (Stand-Up India, PM SVANidhi, PM Vishwakarma, Startup India
+  Seed Fund, Delhi Composite Loan Scheme). The other 11 show an honest "not catalogued
+  yet, check the official source" fallback rather than invented content: Mahila Udyam
+  Nidhi, NSTFDC, NSKFDC, SC-ST Hub, NDFDC, ASPIRE, CGSS, Kudumbashree, Karnataka
+  Udyogini, Mission Shakti, AP Startup Grant. That's correct, not broken. For the
+  details walkthrough use the **rural first-time artisan** profile (top card: Stand-Up
+  India, which has full steps) — the ST agri profile's top card, Mission Shakti, is one
+  of the 11.
 
 ## Verification
 
