@@ -38,7 +38,14 @@ export const schemes: Scheme[] = [
     name: 'Stand-Up India Scheme',
     isDemo: false,
     ministry: 'Department of Financial Services, Ministry of Finance',
-    categories: ['SC', 'ST', 'Woman'],
+    // Official rule: "SC/ST and/or woman entrepreneurs, above 18 years"
+    // (standupmitra.in/Home/SUISchemes, re-checked 2026-09-24). Women
+    // qualify on gender alone, so they go in additionalEligibleGenders —
+    // 'Woman' used to sit in `categories`, where it could never match
+    // (it's compared to profile.category), wrongly hard-failing every
+    // General/OBC woman.
+    categories: ['SC', 'ST'],
+    additionalEligibleGenders: ['Woman'],
     genders: ['Any'],
     states: ['All'],
     sectors: ['Any'],

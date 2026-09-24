@@ -18,7 +18,11 @@ export function describeAudience(scheme: Scheme): string[] {
       ? 'Open to all social/economic categories'
       : scheme.additionalEligibleGroups?.length
         ? `Primarily for ${scheme.categories.join(', ')} entrepreneurs (also open to ${scheme.additionalEligibleGroups.join('/')} applicants)`
-        : `Primarily for ${scheme.categories.join(', ')} entrepreneurs`,
+        : scheme.additionalEligibleGenders?.length
+          ? `For ${scheme.categories.join(', ')} entrepreneurs, or ${scheme.additionalEligibleGenders
+              .map((g) => ({ Woman: 'women', Man: 'men', Transgender: 'transgender' })[g])
+              .join('/')} entrepreneurs of any category`
+          : `Primarily for ${scheme.categories.join(', ')} entrepreneurs`,
     isOpen(scheme.genders) ? 'Open to all genders' : `Focused on ${scheme.genders.join('/')} entrepreneurs`,
     isOpen(scheme.states) ? 'Available nationwide' : `Available in: ${scheme.states.join(', ')}`,
     isOpen(scheme.sectors)

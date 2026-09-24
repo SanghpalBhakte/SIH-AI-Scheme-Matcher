@@ -7,6 +7,7 @@
 
 import { evaluateScheme, matchSchemes } from '../lib/matching/engine'
 import type { Scheme } from '../lib/matching/types'
+import { CATEGORY_OPTIONS, GENDER_OPTIONS } from '../lib/matching/types'
 import { schemes } from '../data/schemes'
 import { demoProfiles } from '../data/demoProfiles'
 import { TOTAL_WEIGHT } from '../lib/matching/weights'
@@ -440,6 +441,53 @@ console.log('\n=== Direct check: no duplicate scheme records (2026-09-02 audit) 
     assert(
       nonKarnatakaApplicant.failedCriteria.some((c) => c.key === 'state') && nonKarnatakaApplicant.eligibilityStatus === 'Low Match',
       'a non-Karnataka applicant correctly hard-fails state on karnataka-udyogini — proves the false nationwide match is gone'
+    )
+  }
+}
+
+console.log('\n=== Direct check: dataset uses only valid category/gender codes (2026-09-24 scan) ===')
+{
+  const validCategories = new Set<string>([...CATEGORY_OPTIONS, 'Any'])
+  const validGenders = new Set<string>([...GENDER_OPTIONS, 'Any'])
+  const badCategories = schemes.flatMap((s) => s.categories.filter((c) => !validCategories.has(c)).map((c) => `${s.id}:${c}`))
+  const badGenders = schemes.flatMap((s) =>
+    [...s.genders, ...(s.additionalEligibleGenders ?? [])].filter((g) => !validGenders.has(g)).map((g) => `${s.id}:${g}`)
+  )
+  assert(badCategories.length === 0, `every scheme.categories value is a real Category code or 'Any' (bad: ${JSON.stringify(badCategories)})`)
+  assert(badGenders.length === 0, `every scheme gender value is a real Gender or 'Any' (bad: ${JSON.stringify(badGenders)})`)
+}
+
+console.log('\n=== Direct check: Stand-Up India is "SC/ST and/or women" (2026-09-24 scan) ===')
+{
+  const standUp = schemes.find((s) => s.id === 'stand-up-india')
+  assert(!!standUp, 'stand-up-india exists in the dataset')
+  if (standUp) {
+    const base = { state: 'Bihar', sector: 'Services', stage: 'Idea' as const, firstTimeEntrepreneur: true, annualIncomeRange: '1-3l' as const }
+    for (const category of ['General', 'OBC', 'SC', 'ST'] as const) {
+      const r = evaluateScheme({ ...base, category, gender: 'Woman' }, standUp)
+      assert(
+        r.matchedCriteria.some((c) => c.key === 'category') && r.eligibilityStatus === 'Likely Eligible',
+        `a first-time ${category} woman is Likely Eligible for Stand-Up India (got ${r.eligibilityStatus})`
+      )
+    }
+    for (const category of ['SC', 'ST'] as const) {
+      const r = evaluateScheme({ ...base, category, gender: 'Man' }, standUp)
+      assert(
+        r.matchedCriteria.some((c) => c.key === 'category') && r.eligibilityStatus === 'Likely Eligible',
+        `a first-time ${category} man is Likely Eligible for Stand-Up India (got ${r.eligibilityStatus})`
+      )
+    }
+    for (const category of ['General', 'OBC'] as const) {
+      const r = evaluateScheme({ ...base, category, gender: 'Man' }, standUp)
+      assert(
+        r.failedCriteria.some((c) => c.key === 'category' && c.label.includes('women of any category')) &&
+          r.eligibilityStatus === 'Low Match',
+        `a ${category} man hard-fails Stand-Up India with an honest "SC/ST or women" reason`
+      )
+    }
+    assert(
+      describeAudience(standUp).some((line) => line.includes('women entrepreneurs of any category')),
+      'describeAudience() tells users Stand-Up India is open to women of any category'
     )
   }
 }

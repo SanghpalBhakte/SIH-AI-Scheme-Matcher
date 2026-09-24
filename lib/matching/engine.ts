@@ -8,6 +8,7 @@ import type {
   CriterionResult,
   EligibilityStatus,
   EntrepreneurProfile,
+  Gender,
   Scheme,
   SchemeMatchResult,
 } from './types'
@@ -19,6 +20,8 @@ const HARD_FAIL_KEYS = new Set<CriterionResult['key']>(['category', 'gender', 's
 function isOpen(list: string[]) {
   return list.includes('Any') || list.includes('All')
 }
+
+const GENDER_PLURAL: Record<Gender, string> = { Woman: 'women', Man: 'men', Transgender: 'transgender' }
 
 function incomeLakh(profile: EntrepreneurProfile): number | null {
   return INCOME_RANGE_OPTIONS.find((o) => o.value === profile.annualIncomeRange)?.representativeLakh ?? null
@@ -57,6 +60,9 @@ export function evaluateScheme(profile: EntrepreneurProfile, scheme: Scheme): Sc
   const matchedSpecialGroups = scheme.additionalEligibleGroups?.length
     ? (profile.specialGroups ?? []).filter((g) => scheme.additionalEligibleGroups!.includes(g))
     : []
+  // Same OR idea for gender-based category eligibility (e.g. Stand-Up
+  // India: "SC/ST and/or women") — see Scheme.additionalEligibleGenders.
+  const matchesEligibleGender = scheme.additionalEligibleGenders?.includes(profile.gender) ?? false
 
   if (isOpen(scheme.categories)) {
     results.push(evaluateCriterion('category', 'matched', 'Open to all categories'))
@@ -70,13 +76,25 @@ export function evaluateScheme(profile: EntrepreneurProfile, scheme: Scheme): Sc
         `Also open to ${matchedSpecialGroups.join('/')} applicants, which matches your profile`
       )
     )
+  } else if (matchesEligibleGender) {
+    results.push(
+      evaluateCriterion(
+        'category',
+        'matched',
+        `Open to ${GENDER_PLURAL[profile.gender]} entrepreneurs of any category, which matches your profile`
+      )
+    )
   } else {
     const eligibleGroups = [...scheme.categories, ...(scheme.additionalEligibleGroups ?? [])]
+    const eligibleGenders = (scheme.additionalEligibleGenders ?? []).map((g) => GENDER_PLURAL[g])
     results.push(
       evaluateCriterion(
         'category',
         'failed',
-        `Restricted to ${eligibleGroups.join('/')} entrepreneurs — you selected ${profile.category}` +
+        `Restricted to ${eligibleGroups.join('/')} entrepreneurs` +
+          (eligibleGenders.length ? ` or ${eligibleGenders.join('/')} of any category` : '') +
+          ` — you selected ${profile.category}` +
+          (eligibleGenders.length ? `, ${profile.gender}` : '') +
           (scheme.additionalEligibleGroups?.length ? " and didn't indicate any of the additional eligible groups" : '')
       )
     )

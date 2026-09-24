@@ -243,6 +243,16 @@ export interface Scheme {
    * behavior for those schemes completely unchanged.
    */
   additionalEligibleGroups?: SpecialGroup[]
+  /**
+   * Genders that satisfy the category criterion ON THEIR OWN, alongside
+   * `categories` — an OR, exactly like `additionalEligibleGroups`. For
+   * schemes whose official rule mixes caste category and gender in one
+   * gate, e.g. Stand-Up India: "SC/ST and/or woman entrepreneurs"
+   * (standupmitra.in). Keeps `categories` limited to real Category
+   * codes — a gender value in `categories` can never match, because
+   * the engine compares it to `profile.category`.
+   */
+  additionalEligibleGenders?: Gender[]
   /** Genders this scheme targets, or ['Any'] if unrestricted. */
   genders: string[]
   /** States this scheme is available in, or ['All'] if nationwide. */

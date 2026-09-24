@@ -37,11 +37,13 @@ export function SchemeBrowserCard({ scheme }: { scheme: Scheme }) {
         </div>
         <div className="flex flex-wrap items-center gap-1.5">
           {scheme.isDemo && <Badge variant="destructive">{t('common.demoSchemeBadge')}</Badge>}
-          {scheme.categories.slice(0, 3).map((c) => (
-            <Badge key={c} variant="secondary">
-              {c}
-            </Badge>
-          ))}
+          {[...scheme.categories, ...(scheme.additionalEligibleGenders ?? []).map((g) => (g === 'Woman' ? 'Women' : g))]
+            .slice(0, 3)
+            .map((c) => (
+              <Badge key={c} variant="secondary">
+                {c}
+              </Badge>
+            ))}
         </div>
       </CardHeader>
 
