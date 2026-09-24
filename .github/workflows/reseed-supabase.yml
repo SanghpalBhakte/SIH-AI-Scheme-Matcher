@@ -8,10 +8,18 @@ name: Reseed Supabase schemes
 # scheme, so the "download PDF" button had nothing to generate from
 # for any visitor whose browser successfully reached Supabase.
 #
-# Runs scripts/seed-supabase-schemes.ts, which flushes and reseeds
-# `public.schemes` to be byte-identical to data/schemes.ts — the same
-# script that used to have to be remembered and run by hand after
-# every edit to that file.
+# Runs scripts/seed-supabase-schemes.ts, which upserts every scheme,
+# removes stale ones, and reads the table back to prove it matches
+# data/schemes.ts exactly — the same script that used to have to be
+# remembered and run by hand after every edit to that file.
+#
+# Two GitHub repos receive the same pushes (SIH-AI-Scheme-Matcher and
+# SIH-AI-Scheme-Matcher-v2). Only a repo that has the SUPABASE_URL and
+# SUPABASE_SERVICE_ROLE_KEY secrets reseeds; in a repo without them an
+# automatic run now SKIPS with a warning instead of failing red on
+# every push (all 4 runs there failed, 2026-09-21 to 2026-09-24).
+# A manual "Run workflow" without the secrets still fails loudly.
+# Seeding is idempotent, so both repos reseeding would also be safe.
 #
 # Triggered only after CI (.github/workflows/ci.yml) finishes
 # successfully on main, so a broken build or a failed engine-
@@ -24,21 +32,53 @@ on:
     types: [completed]
   workflow_dispatch: {}
 
+# One reseed at a time per repo; a newer run waits rather than racing.
+concurrency:
+  group: reseed-supabase
+  cancel-in-progress: false
+
 jobs:
   reseed:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Check Supabase secrets are configured in this repo
+        id: secrets
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          if [ -n "$SUPABASE_URL" ] && [ -n "$SUPABASE_SERVICE_ROLE_KEY" ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "configured=false" >> "$GITHUB_OUTPUT"
+          msg="SUPABASE_URL and/or SUPABASE_SERVICE_ROLE_KEY are not set as secrets in ${GITHUB_REPOSITORY}, so this repo cannot reseed Supabase."
+          if [ "$EVENT" = "workflow_dispatch" ]; then
+            echo "::error title=Reseed not possible::${msg} Add both under Settings -> Secrets and variables -> Actions."
+            exit 1
+          fi
+          echo "::warning title=Reseed skipped::${msg} Nothing in Supabase was changed. Fine if another repo with the secrets reseeds; otherwise add them under Settings -> Secrets and variables -> Actions."
 
-      - uses: actions/setup-node@v4
+      # Seed exactly the commit CI just verified (on workflow_run the
+      # default checkout would be the latest main, which may be newer).
+      - uses: actions/checkout@v5
+        if: steps.secrets.outputs.configured == 'true'
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - uses: actions/setup-node@v5
+        if: steps.secrets.outputs.configured == 'true'
         with:
           node-version: 22
           cache: npm
 
       - run: npm ci
+        if: steps.secrets.outputs.configured == 'true'
 
-      - name: Reseed public.schemes from data/schemes.ts
+      - name: Sync public.schemes with data/schemes.ts
+        if: steps.secrets.outputs.configured == 'true'
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
