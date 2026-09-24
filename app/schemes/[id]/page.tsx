@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useParams } from 'next/navigation'
 import { ArrowLeft, FileText, MapPin, Building2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -32,11 +33,16 @@ import { isLoanBased } from '@/lib/finance/emi'
 // Context) to compute "why this matches you," which is only available
 // to Client Components — hence 'use client' here, unlike the earlier
 // placeholder version of this page.
-export default function SchemeDetailsPage({ params }: { params: { id: string } }) {
+//
+// The id comes from useParams() rather than the `params` prop: in
+// Next.js 15 page props' `params` is a Promise, while useParams() works
+// the same in a Client Component on Next 14 and 15.
+export default function SchemeDetailsPage() {
+  const { id } = useParams<{ id: string }>()
   const { profile, isHydrated } = useAssessment()
   const { t } = useLanguage()
   const schemes = useSchemes()
-  const scheme = schemes.find((s) => s.id === params.id)
+  const scheme = schemes.find((s) => s.id === id)
 
   if (!scheme) {
     return (
