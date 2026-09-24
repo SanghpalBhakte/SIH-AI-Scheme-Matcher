@@ -12,7 +12,7 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import type { DraftEntrepreneurProfile, EntrepreneurProfile } from '@/lib/matching/types'
 import { ASSESSMENT_STEPS } from './steps'
-import { clearPersistedAssessment, loadPersistedAssessment, savePersistedAssessment } from './persistence'
+import { clearPersistedAssessment, discardPersistedAssessment, loadPersistedAssessment, savePersistedAssessment } from './persistence'
 
 // Every eligibility-affecting field starts unselected — no silent
 // defaults (category/gender/state/sector/stage/first-time all start
@@ -157,7 +157,7 @@ export function AssessmentProvider({ children }: { children: ReactNode }) {
       resetAssessment: () => {
         setProfile(DEFAULT_DRAFT_PROFILE)
         setStepIndex(0)
-        clearPersistedAssessment()
+        discardPersistedAssessment()
       },
       isDirty: isDraftDirty(profile),
       isHydrated,

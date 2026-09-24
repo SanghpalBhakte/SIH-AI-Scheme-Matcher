@@ -41,6 +41,22 @@ export async function syncAssessmentProfile(profile: DraftEntrepreneurProfile, s
   }
 }
 
+/** Deletes the mirrored draft (used by "Start over"). Silently no-ops on any failure. */
+export async function deleteAssessmentProfile(): Promise<void> {
+  // Only an EXISTING anonymous session can have a backup row — never
+  // sign a visitor in just to delete nothing.
+  const client = await getSupabaseClient()
+  if (!client) return
+  try {
+    const { data } = await client.auth.getSession()
+    const visitorId = data.session?.user?.id
+    if (!visitorId) return
+    await client.from('assessment_profiles').delete().eq('visitor_id', visitorId)
+  } catch {
+    // best-effort — the local copy is already gone
+  }
+}
+
 /** Mirrors the current saved/bookmarked scheme id list. Silently no-ops on any failure. */
 export async function syncSavedSchemes(ids: string[]): Promise<void> {
   const ctx = await withVisitor()

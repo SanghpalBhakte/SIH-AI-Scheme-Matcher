@@ -20,7 +20,7 @@
 // and client would render different content on the very first paint).
 
 import { ASSESSMENT_STEPS } from './steps'
-import { syncAssessmentProfile } from '@/lib/supabase/sync'
+import { deleteAssessmentProfile, syncAssessmentProfile } from '@/lib/supabase/sync'
 import type { DraftEntrepreneurProfile } from '@/lib/matching/types'
 
 const STORAGE_KEY = 'sih26092.assessment'
@@ -34,6 +34,15 @@ const STORAGE_KEY = 'sih26092.assessment'
 // `disabilityStatus`) for the new eligibility-schema special-groups
 // support — see lib/matching/types.ts's SpecialGroup/deriveSpecialGroups.
 const STORAGE_VERSION = 2
+
+// The Supabase mirror is debounced: the draft changes on every
+// keystroke (name, business name, amounts), and writing each one would
+// mean dozens of network calls per form — plus a slow early request
+// could land after a later one and leave a stale copy. Only the latest
+// draft is sent, once typing pauses. localStorage is still written
+// immediately, so nothing is lost on refresh.
+export const SYNC_DEBOUNCE_MS = 1500
+let pendingSync: ReturnType<typeof setTimeout> | null = null
 
 export interface PersistedAssessmentState {
   profile: DraftEntrepreneurProfile
@@ -138,7 +147,11 @@ export function savePersistedAssessment(profile: DraftEntrepreneurProfile, stepI
   }
   // Best-effort mirror to Supabase — never awaited, never blocks the
   // local save above, silently inert if Supabase isn't configured.
-  syncAssessmentProfile(profile, stepIndex).catch(() => {})
+  if (pendingSync) clearTimeout(pendingSync)
+  pendingSync = setTimeout(() => {
+    pendingSync = null
+    syncAssessmentProfile(profile, stepIndex).catch(() => {})
+  }, SYNC_DEBOUNCE_MS)
 }
 
 /** Clears any persisted draft — used once the draft is back to empty, and on resetAssessment(). */
@@ -149,4 +162,20 @@ export function clearPersistedAssessment(): void {
   } catch {
     // ignore
   }
+  // A queued mirror write must not re-upload a draft that was just cleared.
+  if (pendingSync) {
+    clearTimeout(pendingSync)
+    pendingSync = null
+  }
+}
+
+/**
+ * "Start over": clears the local draft AND deletes the private backup
+ * copy, if one was ever made. Kept separate from clearPersistedAssessment()
+ * because that one also runs automatically on every visit with an empty
+ * draft, which must never trigger a network call.
+ */
+export function discardPersistedAssessment(): void {
+  clearPersistedAssessment()
+  deleteAssessmentProfile().catch(() => {})
 }

@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, ArrowRight, ChevronDown, Sparkles } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ChevronDown, Lock, Sparkles } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
@@ -164,6 +164,12 @@ export default function AssessmentPage() {
             >
               {t('assessment.jumpToDemo')}
             </a>
+          )}
+          {isFirstStep && (
+            <p className="flex items-start gap-1.5 text-xs leading-relaxed text-muted-foreground">
+              <Lock className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
+              <span>{t('assessment.privacyNote', { startOver: t('common.startOver') })}</span>
+            </p>
           )}
         </div>
 
