@@ -13,7 +13,7 @@ import type {
   SchemeMatchResult,
   SpecialGroup,
 } from './types'
-import { INCOME_RANGE_OPTIONS } from './types'
+import { CATEGORY_OPTIONS, GENDER_OPTIONS, INCOME_RANGE_OPTIONS } from './types'
 import { INSUFFICIENT_INFO_MISSING_SHARE, MATCH_WEIGHTS, SCORE_THRESHOLDS, TOTAL_WEIGHT } from './weights'
 
 const HARD_FAIL_KEYS = new Set<CriterionResult['key']>(['category', 'gender', 'state', 'firstTime', 'income'])
@@ -236,12 +236,59 @@ export function evaluateScheme(profile: EntrepreneurProfile, scheme: Scheme): Sc
   return { scheme, matchScore, eligibilityStatus, matchedCriteria, missingCriteria, failedCriteria }
 }
 
+function isHardFailed(result: SchemeMatchResult): boolean {
+  return result.failedCriteria.some((f) => HARD_FAIL_KEYS.has(f.key))
+}
+
+function isMatched(result: SchemeMatchResult, key: CriterionResult['key']): boolean {
+  return result.matchedCriteria.some((c) => c.key === key)
+}
+
+/** True when a list restricts a dimension (not 'Any'/'All' and not every possible option). */
+function isRestricted(list: string[], allOptions: readonly string[]): boolean {
+  return !isOpen(list) && !allOptions.every((o) => list.includes(o))
+}
+
+/** 1 when this is a state scheme for the applicant's own state. */
+function localScore(result: SchemeMatchResult): number {
+  return !isOpen(result.scheme.states) && isMatched(result, 'state') ? 1 : 0
+}
+
+/** How many "who is this for" rules (category/group, gender) target the applicant specifically. */
+function targetedScore(result: SchemeMatchResult): number {
+  const { scheme } = result
+  const categoryTargeted =
+    isRestricted(scheme.categories, CATEGORY_OPTIONS) || (scheme.requiredSpecialGroups?.length ?? 0) > 0
+  const genderTargeted = isRestricted(scheme.genders, GENDER_OPTIONS)
+  return (categoryTargeted && isMatched(result, 'category') ? 1 : 0) + (genderTargeted && isMatched(result, 'gender') ? 1 : 0)
+}
+
 /**
- * Evaluates every scheme in the dataset and returns results sorted by
- * matchScore descending. Callers slice the top N for display — the
- * engine itself never silently drops a scheme, so the UI can always
- * explain "why not" for anything left out of the top 3.
+ * Ranking order, most relevant first:
+ *   1. schemes with no failed hard rule (category/gender/state/
+ *      firstTime/income) always rank above ones that fail a hard rule —
+ *      a "Low Match" can never push an eligible scheme out of the top 3;
+ *   2. then matchScore, descending;
+ *   3. ties: a scheme for the applicant's own state first, then schemes
+ *      built for their specific group (e.g. SC/ST, women), then dataset
+ *      order (Array.prototype.sort is stable).
+ * Deterministic — same inputs always produce the same order.
+ */
+export function compareResults(a: SchemeMatchResult, b: SchemeMatchResult): number {
+  return (
+    Number(isHardFailed(a)) - Number(isHardFailed(b)) ||
+    b.matchScore - a.matchScore ||
+    localScore(b) - localScore(a) ||
+    targetedScore(b) - targetedScore(a)
+  )
+}
+
+/**
+ * Evaluates every scheme in the dataset and returns them ranked (see
+ * compareResults). Callers slice the top N for display — the engine
+ * itself never silently drops a scheme, so the UI can always explain
+ * "why not" for anything left out of the top 3.
  */
 export function matchSchemes(profile: EntrepreneurProfile, schemes: Scheme[]): SchemeMatchResult[] {
-  return schemes.map((scheme) => evaluateScheme(profile, scheme)).sort((a, b) => b.matchScore - a.matchScore)
+  return schemes.map((scheme) => evaluateScheme(profile, scheme)).sort(compareResults)
 }

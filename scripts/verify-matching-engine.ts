@@ -34,8 +34,17 @@ for (const demo of demoProfiles) {
 
   assert(results.length === schemes.length, 'engine returns a result for every scheme (never silently drops one)')
 
-  const sorted = results.every((r, i) => i === 0 || results[i - 1].matchScore >= r.matchScore)
-  assert(sorted, 'results are sorted by matchScore descending')
+  const HARD_KEYS = new Set(['category', 'gender', 'state', 'firstTime', 'income'])
+  const hardFailed = (r: (typeof results)[number]) => r.failedCriteria.some((c) => HARD_KEYS.has(c.key))
+  const firstHardFail = results.findIndex(hardFailed)
+  assert(
+    firstHardFail === -1 || results.slice(firstHardFail).every(hardFailed),
+    'no scheme that fails a hard rule ranks above one that passes every hard rule'
+  )
+  const sortedWithinGroups = results.every(
+    (r, i) => i === 0 || hardFailed(results[i - 1]) !== hardFailed(r) || results[i - 1].matchScore >= r.matchScore
+  )
+  assert(sortedWithinGroups, 'within each group (passes / fails a hard rule), results are sorted by matchScore descending')
 
   const scoresInRange = results.every((r) => r.matchScore >= 0 && r.matchScore <= 100)
   assert(scoresInRange, 'every matchScore is within 0-100')
@@ -541,6 +550,46 @@ console.log('\n=== Direct check: NDFDC is only for persons with disabilities (20
     delhi
   )
   assert(delhiPwd.matchedCriteria.some((c) => c.key === 'category'), 'Delhi Composite Loan still matches a General-category PwD applicant (OR rule intact)')
+}
+
+console.log('\n=== Direct check: ranking — eligible before hard-fails, local/targeted schemes win ties (2026-09-24 scan) ===')
+{
+  // Found by the 2026-09-24 scan: PMEGP (90%, fails firstTime) used to
+  // outrank Mudra Tarun / CGTMSE (85%, Likely Eligible) in the top 3.
+  const repeatFounder = matchSchemes(
+    { category: 'General', gender: 'Woman', state: 'Bihar', sector: 'Trading', stage: 'Idea', firstTimeEntrepreneur: false, annualIncomeRange: '' },
+    schemes
+  )
+  assert(
+    repeatFounder.slice(0, 3).every((r) => r.eligibilityStatus !== 'Low Match'),
+    `a repeat founder's top 3 contains no Low Match while eligible schemes exist (got ${repeatFounder
+      .slice(0, 3)
+      .map((r) => `${r.scheme.id}:${r.eligibilityStatus}`)
+      .join(', ')})`
+  )
+
+  const bihar = matchSchemes(
+    { category: 'SC', gender: 'Man', state: 'Bihar', sector: 'Manufacturing', stage: 'Idea', firstTimeEntrepreneur: true, annualIncomeRange: '1-3l' },
+    schemes
+  )
+  assert(bihar[0].scheme.id === 'bihar-mmuy', `a matching Bihar applicant sees Bihar's own scheme first (got ${bihar[0].scheme.id})`)
+
+  const maharashtra = matchSchemes(
+    { category: 'General', gender: 'Man', state: 'Maharashtra', sector: 'Manufacturing', stage: 'Idea', firstTimeEntrepreneur: true, annualIncomeRange: '3-5l' },
+    schemes
+  )
+  assert(
+    maharashtra[0].scheme.id === 'maharashtra-cmegp',
+    `a matching Maharashtra applicant sees CMEGP first (got ${maharashtra[0].scheme.id})`
+  )
+
+  // Demo safety: the recommended demo profile's top card stays Stand-Up India (enriched with real steps).
+  const artisan = demoProfiles.find((d) => d.id === 'rural-first-time-artisan')!
+  const artisanTop = matchSchemes(artisan.profile, schemes)
+  assert(artisanTop[0].scheme.id === 'stand-up-india', `demo "rural first-time artisan" still opens on Stand-Up India (got ${artisanTop[0].scheme.id})`)
+
+  const again = matchSchemes(artisan.profile, schemes).map((r) => r.scheme.id).join()
+  assert(again === artisanTop.map((r) => r.scheme.id).join(), 'ranking is deterministic across runs')
 }
 
 console.log(failures === 0 ? '\nAll checks passed.' : `\n${failures} check(s) FAILED.`)
