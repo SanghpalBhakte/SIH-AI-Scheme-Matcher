@@ -5,9 +5,13 @@
 -- app reads/writes these tables, always with a silent fallback to the
 -- existing local behavior on any failure.
 --
--- Run this once in the Supabase SQL Editor (Project → SQL Editor →
--- New query → paste → Run). It flushes any tables left over from an
--- earlier, unrelated integration attempt before creating these fresh.
+-- Run this in the Supabase SQL Editor (Project → SQL Editor → New
+-- query → paste → Run). It is SAFE TO RE-RUN: every statement is
+-- idempotent (create ... if not exists / drop policy if exists), so
+-- running it again never deletes visitors' saved data. (Until
+-- 2026-09-24 it began with DROP TABLE ... CASCADE, which wiped every
+-- visitor's backup on each run.) A full reset is at the bottom,
+-- commented out.
 --
 -- After running this, seed the `schemes` table from data/schemes.ts:
 --   SUPABASE_URL=https://gnkjmtxwfmnnziycidlb.supabase.co \
@@ -19,12 +23,6 @@
 -- assessment/saved-scheme/checklist data (schemes themselves are
 -- public-read and don't need it).
 
--- --- Flush anything left over from the earlier, abandoned integration ---
-drop table if exists public.schemes cascade;
-drop table if exists public.assessment_profiles cascade;
-drop table if exists public.saved_schemes cascade;
-drop table if exists public.checklist_progress cascade;
-
 -- --- Schemes: public read-only mirror of data/schemes.ts -----------------
 -- The full Scheme object is stored as jsonb for lossless round-
 -- tripping through the app's existing TypeScript type — `id` is
@@ -34,7 +32,7 @@ drop table if exists public.checklist_progress cascade;
 -- already has. Never edited by hand here — reseed from
 -- data/schemes.ts via `npm run seed:supabase` after any edit there,
 -- so the two never drift.
-create table public.schemes (
+create table if not exists public.schemes (
   id text primary key,
   data jsonb not null,
   updated_at timestamptz not null default now()
@@ -42,6 +40,7 @@ create table public.schemes (
 
 alter table public.schemes enable row level security;
 
+drop policy if exists "schemes are publicly readable" on public.schemes;
 create policy "schemes are publicly readable"
   on public.schemes for select
   using (true);
@@ -55,7 +54,7 @@ create policy "schemes are publicly readable"
 -- Mirrors DraftEntrepreneurProfile (lib/matching/types.ts). A
 -- best-effort backup of what's already in localStorage — see
 -- lib/assessment/persistence.ts.
-create table public.assessment_profiles (
+create table if not exists public.assessment_profiles (
   visitor_id uuid primary key references auth.users(id) on delete cascade,
   profile jsonb not null,
   step_index int not null default 0,
@@ -64,6 +63,7 @@ create table public.assessment_profiles (
 
 alter table public.assessment_profiles enable row level security;
 
+drop policy if exists "visitors manage their own assessment profile" on public.assessment_profiles;
 create policy "visitors manage their own assessment profile"
   on public.assessment_profiles for all
   using (auth.uid() = visitor_id)
@@ -71,7 +71,7 @@ create policy "visitors manage their own assessment profile"
 
 -- --- Per-visitor saved/bookmarked schemes ---------------------------------
 -- Mirrors lib/schemes/saved-schemes-context.tsx's localStorage list.
-create table public.saved_schemes (
+create table if not exists public.saved_schemes (
   visitor_id uuid not null references auth.users(id) on delete cascade,
   scheme_id text not null,
   saved_at timestamptz not null default now(),
@@ -80,6 +80,7 @@ create table public.saved_schemes (
 
 alter table public.saved_schemes enable row level security;
 
+drop policy if exists "visitors manage their own saved schemes" on public.saved_schemes;
 create policy "visitors manage their own saved schemes"
   on public.saved_schemes for all
   using (auth.uid() = visitor_id)
@@ -87,7 +88,7 @@ create policy "visitors manage their own saved schemes"
 
 -- --- Per-visitor, per-scheme application-checklist progress ---------------
 -- Mirrors lib/schemes/checklist-persistence.ts's localStorage state.
-create table public.checklist_progress (
+create table if not exists public.checklist_progress (
   visitor_id uuid not null references auth.users(id) on delete cascade,
   scheme_id text not null,
   completed jsonb not null default '[]'::jsonb,
@@ -97,7 +98,16 @@ create table public.checklist_progress (
 
 alter table public.checklist_progress enable row level security;
 
+drop policy if exists "visitors manage their own checklist progress" on public.checklist_progress;
 create policy "visitors manage their own checklist progress"
   on public.checklist_progress for all
   using (auth.uid() = visitor_id)
   with check (auth.uid() = visitor_id);
+
+-- --- FULL RESET (destructive — deletes ALL visitor data) -----------------
+-- Only for wiping the project back to empty. Uncomment, run, then run
+-- this whole file again and reseed with `npm run seed:supabase`.
+-- drop table if exists public.checklist_progress cascade;
+-- drop table if exists public.saved_schemes cascade;
+-- drop table if exists public.assessment_profiles cascade;
+-- drop table if exists public.schemes cascade;
