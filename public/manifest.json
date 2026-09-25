@@ -1,7 +1,7 @@
 {
-  "name": "SchemeSetu — SIH26092",
+  "name": "SchemeSetu (SIH26092)",
   "short_name": "SchemeSetu",
-  "description": "Prototype: Rule-based matching of government schemes for marginalized entrepreneurs.",
+  "description": "Find government schemes you may qualify for, with a clear reason for each match. A Smart India Hackathon prototype.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

@@ -103,7 +103,7 @@ export function evaluateScheme(profile: EntrepreneurProfile, scheme: Scheme): Sc
         'failed',
         `Restricted to ${eligibleGroups.join('/')} entrepreneurs` +
           (eligibleGenders.length ? ` or ${eligibleGenders.join('/')} of any category` : '') +
-          ` — you selected ${profile.category}` +
+          `, but you selected ${profile.category}` +
           (eligibleGenders.length ? `, ${profile.gender}` : '') +
           (scheme.additionalEligibleGroups?.length ? " and didn't indicate any of the additional eligible groups" : '')
       )
@@ -123,10 +123,10 @@ export function evaluateScheme(profile: EntrepreneurProfile, scheme: Scheme): Sc
     if (held.length > 0) {
       results[categoryIndex] = evaluateCriterion('category', 'matched', `Designed for ${audience}, which matches your profile`)
     } else if (allDeclined) {
-      results[categoryIndex] = evaluateCriterion('category', 'failed', `Only for ${audience} — your answers say this doesn't apply to you`)
+      results[categoryIndex] = evaluateCriterion('category', 'failed', `Only for ${audience}, and your answers say this doesn't apply to you`)
     } else {
       const questions = required.map((g) => SPECIAL_GROUP_QUESTION[g]).join('/')
-      results[categoryIndex] = evaluateCriterion('category', 'missing', `This scheme is only for ${audience} — ${questions} not provided`)
+      results[categoryIndex] = evaluateCriterion('category', 'missing', `This scheme is only for ${audience} (${questions} not provided)`)
     }
   }
 
@@ -187,7 +187,7 @@ export function evaluateScheme(profile: EntrepreneurProfile, scheme: Scheme): Sc
     results.push(evaluateCriterion('income', 'matched', 'No income cap for this scheme'))
   } else if (income == null) {
     results.push(
-      evaluateCriterion('income', 'missing', `This scheme caps annual income at ₹${scheme.maxIncomeLakh} lakh — income not provided`)
+      evaluateCriterion('income', 'missing', `This scheme caps annual income at ₹${scheme.maxIncomeLakh} lakh, and income wasn't provided`)
     )
   } else if (income <= scheme.maxIncomeLakh) {
     results.push(evaluateCriterion('income', 'matched', 'Your income falls within the eligible limit'))

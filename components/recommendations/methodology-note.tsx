@@ -18,7 +18,7 @@ export function MethodologyNote({ className }: { className?: string }) {
     <div className={cn('flex items-start gap-2 rounded-md border border-border bg-secondary/40 p-3 text-xs text-muted-foreground', className)}>
       <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden />
       <p>
-        <strong className="text-foreground">{t('methodology.title')}</strong> — {t('methodology.body')}
+        <strong className="text-foreground">{t('methodology.title')}</strong>, {t('methodology.body')}
       </p>
     </div>
   )

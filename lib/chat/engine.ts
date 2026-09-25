@@ -53,14 +53,14 @@ function eligibilityVerdict(result: SchemeMatchResult): string {
   switch (result.eligibilityStatus) {
     case 'Likely Eligible':
       return (
-        `Yes, you look likely eligible (${score}) — ${reasons}.` +
+        `Yes, you look likely eligible (${score}): ${reasons}.` +
         (failed ? ` One thing doesn't line up: ${failed}.` : '') +
         " This is a rule-based check, not an official decision; final approval depends on the scheme's own verification."
       )
     case 'Possibly Eligible':
-      return `Possibly (${score}) — ${reasons}. But not everything lines up: ${failed}. Check the official rules before applying.`
+      return `Possibly (${score}): ${reasons}. But not everything lines up: ${failed}. Check the official rules before applying.`
     case 'Insufficient Information':
-      return `I can't tell yet (${score} on what I know) — ${result.missingCriteria.length === 1 ? 'one detail is' : 'some details are'} missing: ${missing}. Add it in the assessment and ask again.`
+      return `I can't tell yet (${score} on what I know). ${result.missingCriteria.length === 1 ? 'One detail is' : 'Some details are'} missing: ${missing}. Add it in the assessment and ask again.`
     case 'Low Match':
     default:
       return `Probably not, based on your profile (${score}): ${failed || missing}. The Recommendations page shows schemes that fit you better.`
@@ -69,7 +69,7 @@ function eligibilityVerdict(result: SchemeMatchResult): string {
 
 function askWhichScheme(schemes: Scheme[]): string {
   const example = schemes[0]?.name ?? 'a scheme'
-  return `I'm not sure which scheme you mean. Try naming one — for example "${example}" — or open a scheme's page first and then ask me about it.`
+  return `I'm not sure which scheme you mean. Try naming one, for example "${example}", or open a scheme's page first and then ask me about it.`
 }
 
 /** The two links every scheme-specific reply can offer: its detail page here, and its real official source (never fabricated — only when the dataset actually has one). */
@@ -120,7 +120,7 @@ export function answerQuery(rawInput: string, context: ChatAppContext, session: 
 
   if (schemes.length === 0) {
     return {
-      text: "The scheme database hasn't loaded, so I can't look anything up right now — please try again in a moment.",
+      text: "The scheme list hasn't loaded, so I can't look anything up right now. Please try again in a moment.",
       nextSession: session,
     }
   }
@@ -159,17 +159,17 @@ export function answerQuery(rawInput: string, context: ChatAppContext, session: 
         if (closest.length === 0) {
           return { text: 'None of the schemes in this dataset could be scored against your profile.', nextSession }
         }
-        const lines = closest.map((r) => `• ${r.scheme.name} — ${r.matchScore}% match (${r.eligibilityStatus})`)
+        const lines = closest.map((r) => `• ${r.scheme.name}: ${r.matchScore}% match (${r.eligibilityStatus})`)
         return {
           text:
             "Based on your profile, none of the schemes in this dataset are a strong match right now. " +
-            `The closest are:\n${lines.join('\n')}\n\nThey're worth a direct look even at a lower score — eligibility rules sometimes have exceptions this prototype doesn't model.`,
+            `The closest are:\n${lines.join('\n')}\n\nThey're still worth a look even with a lower score, because eligibility rules sometimes have exceptions this prototype doesn't cover.`,
           actions: closest.map((r) => ({ label: r.scheme.name, href: `/schemes/${r.scheme.id}` })),
           nextSession,
         }
       }
       const top = strong.slice(0, 3)
-      const lines = top.map((r) => `• ${r.scheme.name} — ${r.matchScore}% match (${r.eligibilityStatus})`)
+      const lines = top.map((r) => `• ${r.scheme.name}: ${r.matchScore}% match (${r.eligibilityStatus})`)
       return {
         text:
           `Based on your profile, here's what looks like a good fit:\n${lines.join('\n')}\n\n` +
@@ -183,7 +183,7 @@ export function answerQuery(rawInput: string, context: ChatAppContext, session: 
       if (!activeScheme) return { text: askWhichScheme(schemes), nextSession }
       if (!context.completeProfile) {
         return {
-          text: `I can explain why ${activeScheme.name} would or wouldn't match you once your profile is complete — finish the assessment first.`,
+          text: `I can explain why ${activeScheme.name} would or wouldn't match you once your profile is complete, so finish the assessment first.`,
           actions: [{ label: 'Complete assessment', href: '/assessment' }],
           nextSession,
         }
@@ -200,7 +200,7 @@ export function answerQuery(rawInput: string, context: ChatAppContext, session: 
       if (!activeScheme) return { text: askWhichScheme(schemes), nextSession } // unreachable, see `intent` above
       if (!context.completeProfile) {
         return {
-          text: `I can check whether you're eligible for ${activeScheme.name} once your profile is complete — finish the assessment first (it takes a few minutes).`,
+          text: `I can check whether you're eligible for ${activeScheme.name} once your profile is complete, so finish the assessment first (it takes a few minutes).`,
           actions: [{ label: 'Complete assessment', href: '/assessment' }],
           nextSession,
         }
@@ -238,7 +238,7 @@ export function answerQuery(rawInput: string, context: ChatAppContext, session: 
       return {
         text:
           `${activeScheme.name}'s own stated eligibility rules:\n${lines.join('\n')}\n\n` +
-          'This is the scheme\'s general criteria, not a check against your specific profile — ask "why was this recommended?" for that.',
+          'This is the scheme\'s general criteria, not a check against your own profile. Ask "why was this recommended?" for that.',
         actions: schemeActions(activeScheme),
         nextSession,
       }
@@ -257,8 +257,8 @@ export function answerQuery(rawInput: string, context: ChatAppContext, session: 
       return {
         text:
           `I don't have a confirmed document list for ${activeScheme.name} in the dataset` +
-          `${activeScheme.officialUrl ? ` — check ${activeScheme.officialUrl} directly` : ''}. ` +
-          'In general, government schemes ask for ID proof, address proof, a category/caste certificate (if relevant), and business details — but confirm the exact list on the official portal before applying.',
+          `${activeScheme.officialUrl ? `, so check ${activeScheme.officialUrl} directly` : ''}. ` +
+          'In general, government schemes ask for ID proof, address proof, a category/caste certificate (if relevant) and business details, but confirm the exact list on the official portal before applying.',
         actions: schemeActions(activeScheme),
         nextSession,
       }
@@ -285,14 +285,14 @@ export function answerQuery(rawInput: string, context: ChatAppContext, session: 
     case 'next_action': {
       if (!context.profileComplete) {
         return {
-          text: 'Your best next step is to complete the assessment — it takes a few minutes and unlocks your personalised recommendations.',
+          text: 'Your best next step is to finish the assessment. It takes a few minutes and then you’ll see the schemes that fit you.',
           actions: [{ label: 'Complete assessment', href: '/assessment' }],
           nextSession,
         }
       }
       if (activeScheme) {
         return {
-          text: `For ${activeScheme.name}, work through the application checklist on this page — check eligibility, prepare documents, then head to the official portal.`,
+          text: `For ${activeScheme.name}, go through the application checklist on this page: check eligibility, prepare documents, then go to the official portal.`,
           actions: schemeActions(activeScheme, 'Open checklist'),
           nextSession,
         }
@@ -300,7 +300,7 @@ export function answerQuery(rawInput: string, context: ChatAppContext, session: 
       const results = context.recommendations ?? []
       if (results.length > 0) {
         return {
-          text: `Your profile is complete — review your top match, ${results[0].scheme.name}, on the Recommendations page and open it for the full checklist.`,
+          text: `Your profile is complete. Take a look at your top match, ${results[0].scheme.name}, on the Recommendations page and open it for the full checklist.`,
           actions: [
             { label: 'View recommendations', href: '/recommendations' },
             { label: results[0].scheme.name, href: `/schemes/${results[0].scheme.id}` },
@@ -314,9 +314,9 @@ export function answerQuery(rawInput: string, context: ChatAppContext, session: 
     case 'general_help':
       return {
         text:
-          'I can help you understand government schemes — ask me things like "what schemes am I eligible for", "am I eligible for this scheme", ' +
+          'I can help you understand government schemes. Ask me things like "what schemes am I eligible for", "am I eligible for this scheme", ' +
           '"why was this scheme recommended", "what documents do I need", or "how do I apply". ' +
-          "I only use information already in this app, so I'll say when something isn't in the dataset.",
+          "I only use information already in this app, so I'll tell you when something isn't in it.",
         actions: [{ label: 'Browse all schemes', href: '/schemes' }],
         nextSession,
       }

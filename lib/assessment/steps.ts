@@ -70,7 +70,7 @@ export const ASSESSMENT_STEPS: AssessmentStep[] = [
   {
     id: 'needs',
     title: 'Business needs',
-    description: 'Select everything that applies — this helps us understand what kind of support you need.',
+    description: 'Select everything that applies. This helps us understand what kind of support you need.',
     fields: ['businessNeeds'],
   },
 ]

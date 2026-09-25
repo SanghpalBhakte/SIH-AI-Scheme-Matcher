@@ -21,7 +21,7 @@ export function buildSchemeWhatsAppUrl(scheme: Scheme, detailUrl: string): strin
     '',
     `Check if you're eligible: ${detailUrl}`,
     '',
-    '(Shared from SchemeSetu — a rule-based scheme matcher, not an official government decision.)',
+    '(Shared from SchemeSetu, a student prototype that matches schemes using their eligibility rules. It is not an official government decision.)',
   ].join('\n')
 
   return `https://wa.me/?text=${encodeURIComponent(message)}`

@@ -25,11 +25,31 @@ import { ThemeProvider, THEME_INIT_SCRIPT } from '@/lib/theme/theme-context'
 import { LanguageProvider } from '@/lib/i18n/language-context'
 import { SavedSchemesProvider } from '@/lib/schemes/saved-schemes-context'
 import { SchemesProvider } from '@/lib/schemes/live-schemes'
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '@/lib/site-metadata'
 
 export const metadata: Metadata = {
-  title: 'SchemeSetu — SIH26092',
-  description:
-    'Prototype: Rule-based matching of government schemes for marginalized entrepreneurs (SIH26092).',
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${SITE_NAME} | SIH26092`,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  alternates: { canonical: '/' },
+  // The preview image comes from app/opengraph-image.tsx.
+  openGraph: {
+    type: 'website',
+    siteName: SITE_NAME,
+    locale: 'en_IN',
+    title: `${SITE_NAME} | SIH26092`,
+    description: SITE_DESCRIPTION,
+    url: '/',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${SITE_NAME} | SIH26092`,
+    description: SITE_DESCRIPTION,
+  },
   manifest: '/manifest.json',
   icons: {
     icon: '/icon.svg',

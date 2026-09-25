@@ -23,11 +23,11 @@ export function summarizeMatch(result: SchemeMatchResult): string {
   if (eligibilityStatus === 'Insufficient Information') {
     return missingCriteria.length === 1
       ? `This looks promising, but one detail (${lowercaseFirst(missingCriteria[0].label)}) is still needed to judge it confidently.`
-      : 'This looks promising, but a few details are still needed to judge it confidently — see "Needs verification" below.'
+      : 'This looks promising, but a few details are still needed to judge it properly. See "Needs verification" below.'
   }
 
   if (matchedCriteria.length === 0) {
-    return "None of the criteria this prototype checks lined up with your profile — see \"Not aligned\" below."
+    return "None of the criteria this prototype checks lined up with your profile. See \"Not aligned\" below."
   }
 
   const topReasons = matchedCriteria.slice(0, 2).map((c) => lowercaseFirst(c.label))
@@ -37,11 +37,11 @@ export function summarizeMatch(result: SchemeMatchResult): string {
     case 'Likely Eligible':
       return `Matches well: ${reasonText}. Final approval still depends on the scheme's own verification process.`
     case 'Possibly Eligible':
-      return `Partially matches: ${reasonText} — but ${
+      return `Partially matches: ${reasonText}, but ${
         failedCriteria.length > 0 ? "not every criterion aligns, see \"Not aligned\" below" : 'a few details are unclear'
       }.`
     case 'Low Match':
     default:
-      return 'At least one requirement for this scheme doesn\'t currently fit your profile — see "Not aligned" below.'
+      return 'At least one requirement for this scheme doesn\'t fit your profile right now. See "Not aligned" below.'
   }
 }

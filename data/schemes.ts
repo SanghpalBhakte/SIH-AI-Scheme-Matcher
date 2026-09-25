@@ -1059,7 +1059,7 @@ export const schemes: Scheme[] = [
       },
     ],
     benefit:
-      'Upfront grant of up to ₹2 lakh, plus additional grant support up to ₹15 lakh total until product viability is reached, for early-stage startups (a separate, larger ₹20 lakh grant tier exists for underrepresented founders — see enhancedSupportFor)',
+      'Upfront grant of up to ₹2 lakh, plus additional grant support up to ₹15 lakh total until product viability is reached, for early-stage startups (a separate, larger ₹20 lakh grant tier exists for underrepresented founders)',
     summary:
       "Seed-stage grant support under Andhra Pradesh's Innovation & Startup Policy 4.0 (2024–2029) for startups and students with innovative ideas, administered by the AP Innovation Society.",
     officialUrl: 'https://apit.ap.gov.in/assets/files/2025ITC_36424_MS9_E.pdf',
@@ -1108,7 +1108,7 @@ export const schemes: Scheme[] = [
     // See Task 3 (2026-09-03): mirrors the comments above — flagged as a
     // data-confidence caveat, not just an internal note.
     dataConfidenceNote:
-      "The Scheduled Tribe benefit tier isn't separately stated in the sources checked — verify the ST amount directly with DSFDC. (The required-document list below is now confirmed directly from DSFDC's own PDF, resolving the earlier hedge.)",
+      "The Scheduled Tribe benefit tier isn't separately stated in the sources we checked, so verify the ST amount directly with DSFDC. The required-document list below comes from DSFDC's own PDF.",
     summary:
       'Composite loan assistance for small business/self-employment for SC/ST/OBC/Minority/PwD applicants below a low income threshold, administered by DSFDC under the Social Welfare Department, Government of NCT of Delhi.',
     officialUrl: 'https://dsfdc.delhi.gov.in/sites/default/files/cls_schem_details.pdf',
@@ -1177,7 +1177,7 @@ export const schemes: Scheme[] = [
     // See Task 3 (2026-09-03): mirrors the comment above — flagged as a
     // data-confidence caveat, not just an internal note.
     dataConfidenceNote:
-      "The official Gujarat scheme page couldn't be reached this pass — these figures are corroborated via a secondary source (GUSEC) instead of the primary portal.",
+      "We couldn't reach the official Gujarat scheme page, so these figures come from a secondary source (GUSEC) instead of the main portal.",
     // Re-checked 2026-09-05, correcting the prior note below:
     // startup.gujarat.gov.in itself now loads (via a live browser render)
     // but still has no document checklist, only eligibility/assistance-
@@ -1251,7 +1251,7 @@ export const schemes: Scheme[] = [
     // not be independently fetched this session (blocked/timed out), so
     // it's noted here rather than set as a separate, unverified field.
     benefit:
-      'Bank loan of up to ₹50 lakh (manufacturing) or ₹10 lakh (services), with a margin-money subsidy of 15% (urban) / 25% (rural) for General category applicants — see enhancedSupportFor for the higher tier available to other groups',
+      'Bank loan of up to ₹50 lakh (manufacturing) or ₹10 lakh (services), with a margin-money subsidy of 15% (urban) / 25% (rural) for General category applicants, and a higher subsidy for other groups',
     summary:
       "Maharashtra's own state-level equivalent of PMEGP: credit-linked margin-money subsidy for setting up new micro and small manufacturing/services enterprises, for applicants aged 18–45 who haven't already availed a subsidy under another central or state scheme (one beneficiary per family).",
     officialUrl: 'https://mskvib.org/en/chief-ministers-employment-generation-programme-cmegp/',

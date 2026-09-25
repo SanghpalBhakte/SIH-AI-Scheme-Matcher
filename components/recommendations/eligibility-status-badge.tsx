@@ -16,7 +16,7 @@ export const ELIGIBILITY_STATUS_CONFIG: Record<
   },
   'Possibly Eligible': {
     variant: 'secondary',
-    description: 'Meets most criteria, but not all — worth a closer look before applying.',
+    description: 'Meets most criteria, but not all. Worth a closer look before applying.',
   },
   'Low Match': {
     variant: 'destructive',

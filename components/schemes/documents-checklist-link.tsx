@@ -40,7 +40,7 @@ export function DocumentsChecklistLink({ scheme, className }: { scheme: Scheme; 
             setIsGenerating(false)
           }
         }}
-        aria-label={`${t('browser.documentsRequired', { count })} — ${t('schemeDetails.quickRefDocsDownloadPdf')}`}
+        aria-label={`${t('browser.documentsRequired', { count })}, ${t('schemeDetails.quickRefDocsDownloadPdf')}`}
         className={cn(
           'inline-flex items-center gap-1 text-xs font-semibold text-primary underline-offset-4 hover:underline disabled:pointer-events-none disabled:opacity-60',
           className
