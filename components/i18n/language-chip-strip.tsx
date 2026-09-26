@@ -29,7 +29,7 @@ export function LanguageChipStrip() {
             // audit) gets each chip closer to a comfortable ~36px —
             // this is the primary, most-discoverable way to switch
             // language for a first-time visitor, worth the extra room.
-            'rounded-full border px-2.5 py-2.5 text-xs font-medium transition-colors duration-150',
+            'inline-flex min-h-11 items-center rounded-full border px-3 text-xs font-medium transition-colors duration-150 sm:min-h-9',
             current === l.code
               ? 'border-primary bg-primary text-primary-foreground'
               : 'border-border bg-background text-muted-foreground hover:border-primary/40 hover:text-foreground'

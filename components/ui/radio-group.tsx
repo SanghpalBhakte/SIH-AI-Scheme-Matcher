@@ -19,7 +19,7 @@ interface RadioOptionProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
 const RadioOption = React.forwardRef<HTMLInputElement, RadioOptionProps>(
   ({ className, label, id, ...props }, ref) => (
-    <label htmlFor={id} className="flex min-h-11 cursor-pointer items-center gap-2 py-2 text-sm text-foreground">
+    <label htmlFor={id} className="flex min-h-11 min-w-11 cursor-pointer items-center gap-2 py-2 text-sm text-foreground">
       <input
         ref={ref}
         id={id}

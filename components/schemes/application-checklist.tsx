@@ -66,7 +66,7 @@ function StepDetail({ id, scheme, t }: { id: ChecklistStepId; scheme: Scheme; t:
           href={scheme.officialUrl}
           target="_blank"
           rel="noreferrer"
-          className="break-all text-sm font-semibold text-primary underline-offset-4 hover:underline"
+          className="inline-flex min-h-11 items-center break-all text-sm font-semibold text-primary underline-offset-4 hover:underline sm:min-h-0"
         >
           {scheme.officialUrl}
         </a>
@@ -151,7 +151,7 @@ export function ApplicationChecklist({ scheme }: { scheme: Scheme }) {
             href={scheme.officialUrl}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1 font-semibold text-primary underline-offset-4 hover:underline"
+            className="inline-flex min-h-11 items-center gap-1 font-semibold text-primary underline-offset-4 hover:underline sm:min-h-0"
           >
             {t('checklist.officialPortal')}
             <ExternalLink className="h-3 w-3" aria-hidden />
@@ -187,7 +187,7 @@ export function ApplicationChecklist({ scheme }: { scheme: Scheme }) {
                 disabled={!isHydrated}
                 aria-pressed={isDone}
                 aria-label={t('checklist.markAs', { label, state: isDone ? t('checklist.notStarted') : t('checklist.completed') })}
-                className="mt-0.5 shrink-0 text-muted-foreground transition-all duration-150 hover:scale-110 hover:text-primary disabled:pointer-events-none disabled:opacity-50"
+                className="-m-3 flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors duration-150 hover:text-primary active:bg-secondary disabled:pointer-events-none disabled:opacity-50"
               >
                 {isDone ? (
                   <CheckCircle2 className="h-5 w-5 text-success" aria-hidden />
@@ -202,7 +202,7 @@ export function ApplicationChecklist({ scheme }: { scheme: Scheme }) {
                   </p>
                   <span
                     className={cn(
-                      'shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold',
+                      'shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold',
                       isDone ? 'bg-success/15 text-success' : 'bg-secondary text-secondary-foreground'
                     )}
                   >

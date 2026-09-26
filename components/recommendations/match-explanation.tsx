@@ -53,7 +53,7 @@ export function MatchExplanation({ result }: { result: SchemeMatchResult }) {
           </ul>
           {remainingMatches.length > 0 && (
             <details className="group mt-1.5">
-              <summary className="flex w-fit cursor-pointer list-none items-center gap-1 font-medium text-foreground underline-offset-4 transition-colors hover:text-primary hover:underline">
+              <summary className="flex min-h-11 w-fit cursor-pointer list-none items-center gap-1 font-medium sm:min-h-0 text-foreground underline-offset-4 transition-colors hover:text-primary hover:underline">
                 {t('matchExplanation.moreMatched', { count: remainingMatches.length })}
                 <ChevronDown className="h-3 w-3 transition-transform duration-200 group-open:rotate-180" aria-hidden />
               </summary>

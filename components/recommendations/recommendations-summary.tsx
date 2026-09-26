@@ -25,7 +25,7 @@ export function RecommendationsSummary({
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
       <Card className="transition-all duration-200 hover:-translate-y-0.5 hover:shadow-elevated">
-        <CardContent className="flex items-center gap-3 p-4">
+        <CardContent className="flex items-center gap-3 p-4 sm:p-4">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-primary/10">
             <ListChecks className="h-5 w-5 text-primary" aria-hidden />
           </div>
@@ -39,7 +39,7 @@ export function RecommendationsSummary({
       </Card>
 
       <Card className="transition-all duration-200 hover:-translate-y-0.5 hover:shadow-elevated">
-        <CardContent className="flex items-center gap-3 p-4">
+        <CardContent className="flex items-center gap-3 p-4 sm:p-4">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-accent/15">
             <Award className="h-5 w-5 text-accent" aria-hidden />
           </div>
@@ -53,7 +53,7 @@ export function RecommendationsSummary({
       </Card>
 
       <Card className="transition-all duration-200 hover:-translate-y-0.5 hover:shadow-elevated">
-        <CardContent className="flex items-center gap-3 p-4">
+        <CardContent className="flex items-center gap-3 p-4 sm:p-4">
           <div
             className={cn(
               'flex h-10 w-10 shrink-0 items-center justify-center rounded-md',

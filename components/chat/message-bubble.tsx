@@ -34,14 +34,14 @@ export function MessageBubble({ message }: { message: ChatMessage }) {
         <div className="flex max-w-[85%] flex-wrap gap-1.5">
           {message.actions.map((action) =>
             action.external ? (
-              <Button key={action.href + action.label} asChild variant="outline" size="sm" className="h-7 px-2.5 text-xs">
+              <Button key={action.href + action.label} asChild variant="outline" size="sm" className="h-9 px-3 text-xs sm:h-7 sm:px-2.5">
                 <a href={action.href} target="_blank" rel="noreferrer">
                   {action.label}
                   <ExternalLink className="h-3 w-3" aria-hidden />
                 </a>
               </Button>
             ) : (
-              <Button key={action.href + action.label} asChild variant="outline" size="sm" className="h-7 px-2.5 text-xs">
+              <Button key={action.href + action.label} asChild variant="outline" size="sm" className="h-9 px-3 text-xs sm:h-7 sm:px-2.5">
                 <Link href={action.href}>
                   {action.label}
                   <ArrowRight className="h-3 w-3" aria-hidden />

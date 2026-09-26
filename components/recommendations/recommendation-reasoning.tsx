@@ -93,7 +93,7 @@ export function RecommendationReasoning({
       {variant === 'compact' ? (
         hasMoreToExpand && (
           <details className="group">
-            <summary className="flex w-fit cursor-pointer list-none items-center gap-1 text-xs font-medium text-foreground underline-offset-4 transition-colors hover:text-primary hover:underline">
+            <summary className="flex min-h-11 w-fit cursor-pointer list-none items-center gap-1 text-xs font-medium sm:min-h-0 text-foreground underline-offset-4 transition-colors hover:text-primary hover:underline">
               {t('reasoning.expandMore')}
               <ChevronDown className="h-3 w-3 transition-transform duration-200 group-open:rotate-180" aria-hidden />
             </summary>

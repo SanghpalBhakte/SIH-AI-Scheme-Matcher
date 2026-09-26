@@ -42,7 +42,7 @@ export function DocumentsChecklistLink({ scheme, className }: { scheme: Scheme; 
         }}
         aria-label={`${t('browser.documentsRequired', { count })}, ${t('schemeDetails.quickRefDocsDownloadPdf')}`}
         className={cn(
-          'inline-flex items-center gap-1 text-xs font-semibold text-primary underline-offset-4 hover:underline disabled:pointer-events-none disabled:opacity-60',
+          'inline-flex min-h-11 items-center gap-1 text-xs font-semibold text-primary underline-offset-4 hover:underline disabled:pointer-events-none disabled:opacity-60 sm:min-h-0',
           className
         )}
       >
@@ -64,7 +64,7 @@ export function DocumentsChecklistLink({ scheme, className }: { scheme: Scheme; 
         href={scheme.officialChecklistUrl}
         target="_blank"
         rel="noreferrer"
-        className={cn('inline-flex items-center gap-1 text-xs font-semibold text-primary underline-offset-4 hover:underline', className)}
+        className={cn('inline-flex min-h-11 items-center gap-1 text-xs font-semibold text-primary underline-offset-4 hover:underline sm:min-h-0', className)}
       >
         <ExternalLink className="h-3 w-3 shrink-0" aria-hidden />
         {t('schemeDetails.quickRefDocsOfficialChecklist')}
