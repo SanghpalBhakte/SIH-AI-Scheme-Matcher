@@ -20,8 +20,8 @@ demo-hardening pass (August 2026).
    card. Walk through the match explanation (matched/needs verification/not aligned),
    then scroll to the application checklist and check off a step or two live — it's
    genuinely interactive.
-5. **Official link** — Click "View official scheme →" to show it's a real, working
-   government URL, not a mock.
+5. **Official link** — Click the green **"Visit official scheme"** button to show it's a
+   real, working government URL, not a mock.
 
 Total clicks from landing to a fully explained match: **3** (Start assessment → Load
 this profile → View details).
@@ -69,6 +69,20 @@ this profile → View details).
 - **Current demo top 3s:** rural first-time artisan → Stand-Up India, TREAD, DAY-NRLM ·
   urban tech founder → MUDRA Tarun, Startup India Seed Fund, MUDRA Kishore · ST agri
   entrepreneur (Odisha) → Mission Shakti, NSTFDC Term Loan, DAY-NRLM.
+
+## What changed on 2026-09-27 (phone layout — if you demo on a phone)
+
+- **Bottom tab bar on phones** (Home · Assessment · Schemes · Matches), with labels.
+  It replaces the four unlabelled icons in the old phone header. It hides while the
+  keyboard is open, and the "unsaved progress" warning still fires from it.
+- **Language button is always in the header**, at every screen width. The "12 languages"
+  hint shows once (not on the home page), then hides itself after 12 seconds.
+- **Every tap target is at least 44px on phones**; cards use real "View details" /
+  "Visit official scheme" buttons instead of small text links. The scheme page's
+  actions (EMI, CSC help, Share, Save) are one row of equal tiles.
+- The chat button and footer no longer cover content, and step 4 of the assessment no
+  longer overflows a 360px screen. The laptop layout is unchanged apart from the
+  aligned card buttons and the scheme-page action tiles.
 
 ## Known, intentional limitations (say these proactively if asked)
 
