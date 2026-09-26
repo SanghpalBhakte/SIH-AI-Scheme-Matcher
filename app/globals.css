@@ -137,12 +137,24 @@
 
   html {
     scroll-behavior: smooth;
+    /* In-page anchor jumps (e.g. "Jump to a demo profile") land below the
+       64px sticky header instead of underneath it. */
+    scroll-padding-top: 5rem;
   }
 
   body {
     @apply bg-background text-foreground font-sans;
     font-feature-settings: 'rlig' 1, 'calt' 1;
     transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  /* Phones: reserve room for the fixed bottom tab bar (4rem + the
+     device's home-indicator inset) so the last content on every page can
+     scroll clear of it. Matches `sm:hidden` on MobileTabBar. */
+  @media (max-width: 639px) {
+    body {
+      padding-bottom: calc(4rem + env(safe-area-inset-bottom));
+    }
   }
 
   /* Display headings only — applied explicitly via `font-display`,

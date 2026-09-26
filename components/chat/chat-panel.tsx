@@ -61,7 +61,7 @@ export function ChatPanel({ messages, isTyping, suggestions, onSend, onClose }: 
       role="dialog"
       aria-modal="false"
       aria-label="Assistant chat"
-      className="fixed inset-x-0 bottom-0 z-50 flex h-[85vh] w-full flex-col overflow-hidden rounded-t-2xl border border-border bg-background shadow-elevated-lg sm:inset-x-auto sm:bottom-6 sm:right-6 sm:h-[600px] sm:max-h-[80vh] sm:w-[380px] sm:rounded-xl"
+      className="fixed inset-x-0 bottom-0 z-50 flex h-[85dvh] w-full flex-col overflow-hidden rounded-t-2xl border border-border bg-background shadow-elevated-lg sm:inset-x-auto sm:bottom-6 sm:right-6 sm:h-[600px] sm:max-h-[80vh] sm:w-[380px] sm:rounded-xl"
     >
       {/* Header */}
       <div className="flex shrink-0 items-center justify-between gap-2 border-b border-border bg-card px-4 py-3">
@@ -71,7 +71,7 @@ export function ChatPanel({ messages, isTyping, suggestions, onSend, onClose }: 
           </span>
           <div className="min-w-0">
             <p className="text-sm font-semibold leading-tight text-foreground">{t('chat.assistantLabel')}</p>
-            <p className="text-[11px] leading-tight text-muted-foreground">Answers from this app&apos;s own data</p>
+            <p className="text-xs leading-tight text-muted-foreground">Answers from this app&apos;s own data</p>
           </div>
         </div>
         <Button

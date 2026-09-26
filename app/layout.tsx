@@ -17,6 +17,7 @@ import '@fontsource/fraunces/700.css'
 import './globals.css'
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
+import { MobileTabBar } from '@/components/layout/mobile-tab-bar'
 import { SkipToContentLink } from '@/components/layout/skip-to-content-link'
 import { ChatWidget } from '@/components/chat/chat-widget'
 import { ServiceWorkerRegistration } from '@/components/pwa/service-worker-registration'
@@ -99,6 +100,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   <div id="main-content" className="flex-1">{children}</div>
 
                   <SiteFooter />
+
+                  {/* Phones only: labelled bottom navigation (see mobile-tab-bar.tsx). */}
+                  <MobileTabBar />
 
                   {/* App-wide floating assistant — see components/chat/chat-widget.tsx.
                       Mounted here (inside AssessmentProvider, outside <main>) so it reads

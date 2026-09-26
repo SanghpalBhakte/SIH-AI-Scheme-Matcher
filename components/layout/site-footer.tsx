@@ -31,8 +31,9 @@ export function SiteFooter() {
     // bottom-right band (see chat-launcher.tsx), instead of landing
     // under it. Not needed from sm: up, where the launcher moves to
     // bottom-6 and taller viewports make this a non-issue.
-    <footer className="mt-28 border-t border-border bg-secondary/30 sm:mt-0">
-      <div className="container flex flex-col gap-8 py-10">
+    <footer className="mt-16 border-t border-border bg-secondary/30 sm:mt-0">
+      {/* pb-24 on phones: the last lines can scroll clear of the chat button. */}
+      <div className="container flex flex-col gap-8 pb-24 pt-10 sm:py-10">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-[1.3fr_1fr_1fr]">
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
@@ -45,27 +46,27 @@ export function SiteFooter() {
 
           <div className="space-y-2.5">
             <p className="text-xs font-semibold uppercase tracking-wide text-foreground">{t('footer.platformHeading')}</p>
-            <nav className="flex flex-col gap-1.5 text-sm">
-              <Link href="/assessment" className="text-muted-foreground transition-colors hover:text-foreground">
+            <nav className="flex flex-col text-sm sm:gap-1.5">
+              <Link href="/assessment" className="flex min-h-11 items-center text-muted-foreground transition-colors hover:text-foreground sm:min-h-0">
                 {t('nav.assessment')}
               </Link>
-              <Link href="/schemes" className="text-muted-foreground transition-colors hover:text-foreground">
+              <Link href="/schemes" className="flex min-h-11 items-center text-muted-foreground transition-colors hover:text-foreground sm:min-h-0">
                 {t('nav.schemes')}
               </Link>
-              <Link href="/dashboard" className="text-muted-foreground transition-colors hover:text-foreground">
+              <Link href="/dashboard" className="flex min-h-11 items-center text-muted-foreground transition-colors hover:text-foreground sm:min-h-0">
                 {t('nav.saved')}
               </Link>
-              <Link href="/institutions" className="text-muted-foreground transition-colors hover:text-foreground">
+              <Link href="/institutions" className="flex min-h-11 items-center text-muted-foreground transition-colors hover:text-foreground sm:min-h-0">
                 {t('nav.institutions')}
               </Link>
-              <Link href="/emi-calculator" className="text-muted-foreground transition-colors hover:text-foreground">
+              <Link href="/emi-calculator" className="flex min-h-11 items-center text-muted-foreground transition-colors hover:text-foreground sm:min-h-0">
                 {t('nav.emiCalculator')}
               </Link>
               <a
                 href={CSC_LOCATOR_URL}
                 target="_blank"
                 rel="noreferrer"
-                className="text-muted-foreground transition-colors hover:text-foreground"
+                className="flex min-h-11 items-center text-muted-foreground transition-colors hover:text-foreground sm:min-h-0"
               >
                 {t('checklist.findCscHelp')}
               </a>

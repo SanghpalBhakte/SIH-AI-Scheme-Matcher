@@ -34,7 +34,7 @@ export const ChatLauncher = forwardRef<HTMLButtonElement, ChatLauncherProps>(fun
       // while leaving the rest of that element reachable. Desktop keeps
       // the original labeled pill — collisions there are far less
       // likely on taller viewports, and the label helps discovery.
-      className="fixed bottom-4 right-4 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-elevated-lg transition-all duration-150 hover:-translate-y-0.5 hover:shadow-elevated-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:bottom-6 sm:right-6 sm:h-auto sm:w-auto sm:gap-2 sm:px-4 sm:py-3"
+      className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] right-4 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-elevated-lg transition-all duration-150 hover:-translate-y-0.5 hover:shadow-elevated-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:bottom-6 sm:right-6 sm:h-auto sm:w-auto sm:gap-2 sm:px-4 sm:py-3"
     >
       <MessageCircle className="h-5 w-5 shrink-0" aria-hidden />
       <span className="hidden text-sm font-semibold sm:inline">{label}</span>

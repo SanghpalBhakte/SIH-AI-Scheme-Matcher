@@ -72,7 +72,7 @@ export function LanguageToggle({ onOpenChange }: { onOpenChange?: (open: boolean
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={t('nav.languageToggle')}
-        className="flex h-9 items-center gap-1.5 rounded-md px-2 text-muted-foreground transition-colors duration-150 hover:bg-secondary hover:text-foreground"
+        className="flex h-11 items-center gap-1.5 rounded-md px-2.5 text-muted-foreground transition-colors duration-150 hover:bg-secondary hover:text-foreground sm:h-9 sm:px-2"
       >
         <Languages className="h-4 w-4 shrink-0" aria-hidden />
         <span className="text-xs font-medium">{isHydrated ? current.shortLabel : LOCALES[0].shortLabel}</span>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
 import { X } from 'lucide-react'
 
 import { useLanguage } from '@/lib/i18n/language-context'
@@ -30,11 +31,18 @@ const STORAGE_KEY = 'sih26092.languageNudgeDismissed'
  * (a standalone icon at `sm` and up, tucked inside the "More" menu
  * below it — see mobile-more-menu.tsx) — hence the generic "in the
  * header" wording instead of the old "tap here" pointing at a specific
- * icon. `bottom-24` clears the fixed chat launcher (bottom-4, 48px
- * tall) with room to spare.
+ * icon.
+ *
+ * 2026-09-26 (mobile UX pass): shown ONCE per browser (marked seen the
+ * moment it appears), auto-hides after 12s, never on the home page (which
+ * already shows every language as a chip), and on phones it sits above
+ * the chat launcher and the bottom tab bar instead of on top of page
+ * content. The language button is now visible in the header at every
+ * width, so the copy can point at it directly.
  */
 export function LanguageNudge({ hidden = false }: { hidden?: boolean }) {
   const { locale, isHydrated } = useLanguage()
+  const pathname = usePathname()
   const [dismissed, setDismissed] = useState(true)
   const [storageChecked, setStorageChecked] = useState(false)
 
@@ -62,12 +70,27 @@ export function LanguageNudge({ hidden = false }: { hidden?: boolean }) {
     if (isHydrated && locale !== DEFAULT_LOCALE) dismiss()
   }, [isHydrated, locale])
 
-  if (hidden || !isHydrated || !storageChecked || dismissed || locale !== DEFAULT_LOCALE) return null
+  const visible = !hidden && isHydrated && storageChecked && !dismissed && locale === DEFAULT_LOCALE && pathname !== '/'
+
+  // One-time hint: remember it was seen as soon as it appears, and get
+  // out of the way on its own after 12s.
+  useEffect(() => {
+    if (!visible) return
+    try {
+      window.localStorage.setItem(STORAGE_KEY, '1')
+    } catch {
+      // storage unavailable — it'll just show again next visit
+    }
+    const id = window.setTimeout(() => setDismissed(true), 12000)
+    return () => window.clearTimeout(id)
+  }, [visible])
+
+  if (!visible) return null
 
   return (
     <div
       role="status"
-      className="animate-fade-in-up fixed inset-x-4 bottom-24 z-20 mx-auto max-w-sm rounded-md border border-border bg-card p-3 text-left shadow-elevated-lg"
+      className="animate-fade-in-up fixed inset-x-4 bottom-[calc(9rem+env(safe-area-inset-bottom))] z-30 mx-auto max-w-sm rounded-md border border-border bg-card py-2 pl-3 pr-12 text-left shadow-elevated-lg sm:bottom-24"
     >
       <button
         type="button"
@@ -76,13 +99,13 @@ export function LanguageNudge({ hidden = false }: { hidden?: boolean }) {
         // p-2.5 around a 12px icon gives a ~32px tap target (the icon
         // itself stays visually small) — the raw p-0.5 this replaced
         // measured at just 16x16px on a real mobile audit.
-        className="absolute right-0.5 top-0.5 rounded-sm p-2.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+        className="absolute right-0 top-0 flex h-11 w-11 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
       >
-        <X className="h-3 w-3" aria-hidden />
+        <X className="h-4 w-4" aria-hidden />
       </button>
-      <p className="pr-6 text-xs leading-relaxed text-foreground">
-        <span className="font-semibold">12 Indian languages available.</span> Switch anytime using the language icon
-        in the header.
+      <p className="text-xs leading-relaxed text-foreground">
+        <span className="font-semibold">12 Indian languages available.</span> Switch anytime with the language
+        button at the top of the screen.
       </p>
     </div>
   )

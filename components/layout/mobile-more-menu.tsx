@@ -3,10 +3,9 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Bookmark, Calculator, Check, ChevronLeft, ChevronRight, ExternalLink, Languages, MapPin, Moon, MoreHorizontal, Sun } from 'lucide-react'
+import { Bookmark, Calculator, ExternalLink, MapPin, Moon, MoreHorizontal, Sun } from 'lucide-react'
 
 import { useLanguage } from '@/lib/i18n/language-context'
-import { LOCALES, type Locale } from '@/lib/i18n/translations'
 import { useTheme } from '@/lib/theme/theme-context'
 import { useSavedSchemes } from '@/lib/schemes/saved-schemes-context'
 import { CSC_LOCATOR_URL } from '@/lib/schemes/csc-locator'
@@ -31,24 +30,20 @@ import { cn } from '@/lib/utils'
  * enough even at 320px. At `sm` and above there's no such pressure, so
  * the header keeps showing the four controls separately (unchanged).
  *
- * Two-view popover rather than one 16-row list (4 action rows + 12
- * languages would be a lot to scan in one menu): the main view has the
- * usual short list, and tapping "Language" swaps the panel to the
- * language list (same options as LanguageToggle) with a back arrow —
- * same hand-rolled popover mechanics as ToolsMenu/LanguageToggle
- * (outside-click + Escape close, real focusable rows), just with an
- * internal view switch instead of a second trigger.
+ * 2026-09-26: the four primary links moved to the bottom tab bar
+ * (mobile-tab-bar.tsx) and the language button is back in the header at
+ * every width, so this menu is now just Saved schemes, EMI calculator,
+ * CSC help and the theme switch.
  */
 export function MobileMoreMenu() {
   const pathname = usePathname()
-  const { t, locale, setLocale, isHydrated: langHydrated } = useLanguage()
+  const { t } = useLanguage()
   const { theme, mounted: themeMounted, toggleTheme } = useTheme()
   const { savedIds, isHydrated: savedHydrated } = useSavedSchemes()
   const savedCount = savedHydrated ? savedIds.length : 0
   const isDark = themeMounted && theme === 'dark'
 
   const [open, setOpen] = useState(false)
-  const [view, setView] = useState<'main' | 'language'>('main')
   const rootRef = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
 
@@ -75,18 +70,8 @@ export function MobileMoreMenu() {
 
   function close() {
     setOpen(false)
-    // Reset back to the main view for next time, after the close
-    // animation/click has a moment to register — avoids a visible
-    // flash back to "main" while the panel is still fading out.
-    setTimeout(() => setView('main'), 150)
   }
 
-  function choose(code: Locale) {
-    setLocale(code)
-    close()
-  }
-
-  const current = LOCALES.find((l) => l.code === locale) ?? LOCALES[0]
   const isActive = pathname === '/dashboard' || pathname === '/emi-calculator'
 
   return (
@@ -118,102 +103,57 @@ export function MobileMoreMenu() {
           aria-label={t('nav.moreMenu')}
           className="animate-fade-in-up absolute right-0 top-full z-30 mt-2 max-h-80 w-64 overflow-y-auto rounded-lg border border-border bg-card p-1.5 shadow-elevated-lg"
         >
-          {view === 'main' ? (
-            <>
-              <Link
-                href="/dashboard"
-                role="menuitem"
-                onClick={close}
-                className="flex items-center gap-2.5 rounded-md px-2.5 py-2.5 text-sm text-foreground transition-colors duration-100 hover:bg-secondary"
-              >
-                <Bookmark className="h-4 w-4 shrink-0 text-primary" aria-hidden />
-                <span className="flex-1">{t('nav.savedSchemesLink')}</span>
-                {savedCount > 0 && (
-                  <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1 text-[11px] font-semibold leading-none text-accent-foreground">
-                    {savedCount}
-                  </span>
-                )}
-              </Link>
-              <Link
-                href="/emi-calculator"
-                role="menuitem"
-                onClick={close}
-                className="flex items-center gap-2.5 rounded-md px-2.5 py-2.5 text-sm text-foreground transition-colors duration-100 hover:bg-secondary"
-              >
-                <Calculator className="h-4 w-4 shrink-0 text-primary" aria-hidden />
-                {t('nav.emiCalculator')}
-              </Link>
-              <a
-                href={CSC_LOCATOR_URL}
-                target="_blank"
-                rel="noreferrer"
-                role="menuitem"
-                onClick={close}
-                className="flex items-center gap-2.5 rounded-md px-2.5 py-2.5 text-sm text-foreground transition-colors duration-100 hover:bg-secondary"
-              >
-                <MapPin className="h-4 w-4 shrink-0 text-primary" aria-hidden />
-                <span className="flex-1">{t('checklist.findCscHelp')}</span>
-                <ExternalLink className="h-3.5 w-3.5 shrink-0 text-muted-foreground" aria-hidden />
-              </a>
+          <Link
+            href="/dashboard"
+            role="menuitem"
+            onClick={close}
+            className="flex min-h-11 items-center gap-2.5 rounded-md px-2.5 py-2.5 text-sm text-foreground transition-colors duration-100 hover:bg-secondary"
+          >
+            <Bookmark className="h-4 w-4 shrink-0 text-primary" aria-hidden />
+            <span className="flex-1">{t('nav.savedSchemesLink')}</span>
+            {savedCount > 0 && (
+              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1 text-[11px] font-semibold leading-none text-accent-foreground">
+                {savedCount}
+              </span>
+            )}
+          </Link>
+          <Link
+            href="/emi-calculator"
+            role="menuitem"
+            onClick={close}
+            className="flex min-h-11 items-center gap-2.5 rounded-md px-2.5 py-2.5 text-sm text-foreground transition-colors duration-100 hover:bg-secondary"
+          >
+            <Calculator className="h-4 w-4 shrink-0 text-primary" aria-hidden />
+            {t('nav.emiCalculator')}
+          </Link>
+          <a
+            href={CSC_LOCATOR_URL}
+            target="_blank"
+            rel="noreferrer"
+            role="menuitem"
+            onClick={close}
+            className="flex min-h-11 items-center gap-2.5 rounded-md px-2.5 py-2.5 text-sm text-foreground transition-colors duration-100 hover:bg-secondary"
+          >
+            <MapPin className="h-4 w-4 shrink-0 text-primary" aria-hidden />
+            <span className="flex-1">{t('checklist.findCscHelp')}</span>
+            <ExternalLink className="h-3.5 w-3.5 shrink-0 text-muted-foreground" aria-hidden />
+          </a>
 
-              <div className="my-1.5 border-t border-border" />
+          <div className="my-1.5 border-t border-border" />
 
-              <button
-                type="button"
-                role="menuitem"
-                onClick={() => setView('language')}
-                className="flex w-full items-center gap-2.5 rounded-md px-2.5 py-2.5 text-left text-sm text-foreground transition-colors duration-100 hover:bg-secondary"
-              >
-                <Languages className="h-4 w-4 shrink-0 text-primary" aria-hidden />
-                <span className="flex-1">{t('nav.languageToggle')}</span>
-                <span className="text-xs text-muted-foreground">{langHydrated ? current.shortLabel : LOCALES[0].shortLabel}</span>
-                <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground" aria-hidden />
-              </button>
-              <button
-                type="button"
-                role="menuitem"
-                onClick={toggleTheme}
-                className="flex w-full items-center gap-2.5 rounded-md px-2.5 py-2.5 text-left text-sm text-foreground transition-colors duration-100 hover:bg-secondary"
-              >
-                {isDark ? (
-                  <Sun className="h-4 w-4 shrink-0 text-primary" aria-hidden />
-                ) : (
-                  <Moon className="h-4 w-4 shrink-0 text-primary" aria-hidden />
-                )}
-                <span className="flex-1">{isDark ? 'Switch to light mode' : 'Switch to dark mode'}</span>
-              </button>
-            </>
-          ) : (
-            <>
-              <button
-                type="button"
-                onClick={() => setView('main')}
-                className="mb-1 flex w-full items-center gap-1.5 rounded-md px-2 py-2 text-left text-xs font-medium text-muted-foreground transition-colors duration-100 hover:bg-secondary hover:text-foreground"
-              >
-                <ChevronLeft className="h-3.5 w-3.5 shrink-0" aria-hidden />
-                {t('nav.languageToggle')}
-              </button>
-              {LOCALES.map((l) => (
-                <button
-                  key={l.code}
-                  type="button"
-                  role="menuitemradio"
-                  aria-checked={l.code === locale}
-                  onClick={() => choose(l.code)}
-                  className={cn(
-                    'flex w-full items-center justify-between gap-2 rounded-md px-2.5 py-2 text-left text-sm transition-colors duration-100',
-                    l.code === locale ? 'bg-primary/10 font-medium text-primary' : 'text-foreground hover:bg-secondary'
-                  )}
-                >
-                  <span className="flex items-baseline gap-2">
-                    <span>{l.nativeLabel}</span>
-                    <span className="text-xs text-muted-foreground">{l.label}</span>
-                  </span>
-                  {l.code === locale && <Check className="h-3.5 w-3.5 shrink-0" aria-hidden />}
-                </button>
-              ))}
-            </>
-          )}
+          <button
+            type="button"
+            role="menuitem"
+            onClick={toggleTheme}
+            className="flex min-h-11 w-full items-center gap-2.5 rounded-md px-2.5 py-2.5 text-left text-sm text-foreground transition-colors duration-100 hover:bg-secondary"
+          >
+            {isDark ? (
+              <Sun className="h-4 w-4 shrink-0 text-primary" aria-hidden />
+            ) : (
+              <Moon className="h-4 w-4 shrink-0 text-primary" aria-hidden />
+            )}
+            <span className="flex-1">{isDark ? 'Switch to light mode' : 'Switch to dark mode'}</span>
+          </button>
         </div>
       )}
     </div>
