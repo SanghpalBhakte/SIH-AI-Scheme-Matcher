@@ -1,10 +1,9 @@
 'use client'
 
-import Link from 'next/link'
-
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { SaveSchemeButton } from '@/components/schemes/save-scheme-button'
+import { SchemeCardActions } from '@/components/schemes/scheme-card-actions'
 import { DataConfidenceNote } from '@/components/schemes/data-confidence-note'
 import { useLanguage } from '@/lib/i18n/language-context'
 import type { Scheme } from '@/lib/matching/types'
@@ -37,17 +36,18 @@ export function SchemeBrowserCard({ scheme }: { scheme: Scheme }) {
         </div>
         <div className="flex flex-wrap items-center gap-1.5">
           {scheme.isDemo && <Badge variant="destructive">{t('common.demoSchemeBadge')}</Badge>}
+          {/* 'Any' is a data code, not a label — show "All categories" instead. */}
           {[...scheme.categories, ...(scheme.additionalEligibleGenders ?? []).map((g) => (g === 'Woman' ? 'Women' : g))]
             .slice(0, 3)
             .map((c) => (
               <Badge key={c} variant="secondary">
-                {c}
+                {c === 'Any' ? t('common.allCategories') : c}
               </Badge>
             ))}
         </div>
       </CardHeader>
 
-      <CardContent className="flex-1 space-y-3 text-sm">
+      <CardContent className="flex flex-1 flex-col gap-3 text-sm">
         <p className="font-medium text-primary">{scheme.benefit}</p>
         <p className="text-muted-foreground">{scheme.summary}</p>
         <p className="text-xs text-muted-foreground">
@@ -57,24 +57,7 @@ export function SchemeBrowserCard({ scheme }: { scheme: Scheme }) {
         </p>
         <DataConfidenceNote scheme={scheme} />
 
-        <div className="flex flex-wrap items-center gap-3 pt-1">
-          <Link
-            href={`/schemes/${scheme.id}`}
-            className="text-xs font-semibold text-foreground underline-offset-4 hover:underline"
-          >
-            {t('common.viewDetails')}
-          </Link>
-          {scheme.officialUrl && (
-            <a
-              href={scheme.officialUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="text-xs font-semibold text-primary underline-offset-4 hover:underline"
-            >
-              {t('common.officialPortal')}
-            </a>
-          )}
-        </div>
+        <SchemeCardActions scheme={scheme} />
       </CardContent>
     </Card>
   )

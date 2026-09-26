@@ -33,14 +33,14 @@ export default function DashboardPage() {
 
   if (!isHydrated) {
     return (
-      <main className="container flex min-h-[40vh] items-center justify-center py-12">
+      <main className="container flex min-h-[40vh] items-center justify-center py-8 sm:py-12">
         <p className="text-sm text-muted-foreground">{t('common.loading')}</p>
       </main>
     )
   }
 
   return (
-    <main className="container flex flex-col gap-6 py-12">
+    <main className="container flex flex-col gap-6 py-8 sm:py-12">
       <div className="space-y-1">
         <h1 className="font-display text-xl font-semibold text-foreground">{t('saved.title')}</h1>
         <p className="text-sm text-muted-foreground">{t('saved.subtitle')}</p>

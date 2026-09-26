@@ -163,7 +163,7 @@ export default function HomePage() {
                     rather than a text badge. */}
                 <ApprovalStamp className="absolute -right-4 -top-4 z-20 h-20 w-20" />
                 <div
-                  className="animate-fade-in-up absolute -bottom-3 left-1/2 w-48 -translate-x-1/2 rounded-lg border border-border bg-card/95 px-3 py-2 text-center shadow-elevated backdrop-blur-sm"
+                  className="animate-fade-in-up absolute inset-x-0 -bottom-3 mx-auto w-48 rounded-lg border border-border bg-card/95 px-3 py-2 text-center shadow-elevated backdrop-blur-sm"
                   style={{ animationDelay: '150ms' }}
                 >
                   <p className="flex items-center justify-center gap-1.5 text-xs font-semibold text-foreground">
@@ -210,7 +210,7 @@ export default function HomePage() {
                   than a text badge. */}
               <ApprovalStamp className="absolute -right-6 -top-6 z-20 h-28 w-28" />
               <div
-                className="animate-fade-in-up absolute -bottom-4 left-1/2 w-56 -translate-x-1/2 rounded-lg border border-border bg-card/95 px-3 py-2 text-center shadow-elevated backdrop-blur-sm"
+                className="animate-fade-in-up absolute inset-x-0 -bottom-4 mx-auto w-56 rounded-lg border border-border bg-card/95 px-3 py-2 text-center shadow-elevated backdrop-blur-sm"
                 style={{ animationDelay: '150ms' }}
               >
                 <p className="flex items-center justify-center gap-1.5 text-xs font-semibold text-foreground">

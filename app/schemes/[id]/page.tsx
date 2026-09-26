@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import { ArrowLeft, FileText, MapPin, Building2 } from 'lucide-react'
+import { ArrowLeft, ExternalLink, FileText, MapPin, Building2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader } from '@/components/ui/
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { DisclaimerBanner } from '@/components/layout/disclaimer-banner'
 import { EligibilityStatusBadge } from '@/components/recommendations/eligibility-status-badge'
+import { MatchScoreRing } from '@/components/recommendations/match-score-ring'
 import { MatchExplanation } from '@/components/recommendations/match-explanation'
 import { RecommendationReasoning } from '@/components/recommendations/recommendation-reasoning'
 import { RecommendationDisclaimer } from '@/components/recommendations/recommendation-disclaimer'
@@ -27,6 +28,12 @@ import { useSchemes } from '@/lib/schemes/live-schemes'
 import { isProfileComplete, toEngineProfile } from '@/lib/matching/types'
 import { getInstitutionForScheme } from '@/lib/institutions/directory'
 import { isLoanBased } from '@/lib/finance/emi'
+
+// Quick actions as one row of equal-width tiles (icon over a short,
+// wrapping label) at every width. As inline buttons they wrapped into a
+// ragged 3 + 1 on desktop and a 4-row stack on phones.
+const QUICK_ACTION_TILE =
+  'h-auto min-h-[4.25rem] w-full flex-col gap-1 whitespace-normal px-1 py-2 text-center text-xs leading-tight sm:text-sm'
 
 // Continues the explanation started on /recommendations for a single
 // scheme. This route needs the in-progress assessment profile (React
@@ -73,7 +80,7 @@ export default function SchemeDetailsPage() {
   const loanBased = isLoanBased(scheme)
 
   return (
-    <main className="container flex flex-col gap-6 py-12">
+    <main className="container flex flex-col gap-6 py-8 sm:py-12">
       <Button variant="outline" size="sm" className="w-fit" asChild>
         <Link href="/recommendations">
           <ArrowLeft className="h-4 w-4" />
@@ -92,15 +99,7 @@ export default function SchemeDetailsPage() {
               <h1 className="font-display text-lg font-semibold leading-none tracking-tight">{scheme.name}</h1>
               {scheme.ministry && <CardDescription>{scheme.ministry}</CardDescription>}
             </div>
-            {result && (
-              <div
-                className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-full border-2 border-primary/20 bg-primary/5 text-center leading-none"
-                aria-label={`${result.matchScore} percent match`}
-              >
-                <span className="text-sm font-bold text-primary">{result.matchScore}</span>
-                <span className="text-[9px] font-medium text-muted-foreground">%</span>
-              </div>
-            )}
+            {result && <MatchScoreRing score={result.matchScore} />}
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
@@ -108,20 +107,22 @@ export default function SchemeDetailsPage() {
             {scheme.isDemo && <Badge variant="destructive">{t('common.demoSchemeBadge')}</Badge>}
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-col items-start gap-3 pt-1">
+            {/* The scheme's main next step, so a real button (full width on
+                phones), not a text link. */}
             {scheme.officialUrl ? (
-              <a
-                href={scheme.officialUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="w-fit text-sm font-semibold text-primary underline-offset-4 hover:underline"
-              >
-                {t('common.officialPortal')}
-              </a>
+              <Button className="w-full sm:w-auto" asChild>
+                <a href={scheme.officialUrl} target="_blank" rel="noreferrer">
+                  {t('common.officialPortal').replace(/\s*→\s*$/, '')}
+                  <ExternalLink className="h-4 w-4" aria-hidden />
+                </a>
+              </Button>
             ) : (
               <p className="text-xs text-muted-foreground">{t('schemeDetails.noOfficialLink')}</p>
             )}
-            <div className="ml-auto flex flex-wrap items-center gap-2">
+            {/* One row of equal-width icon-over-label tiles (3 or 4,
+                depending on whether EMI applies). */}
+            <div className="grid w-full auto-cols-fr grid-flow-col gap-2">
               {/* EMI Calculator and CSC help used to be a small text
                   link buried a section down (EMI) or only reachable
                   from the header's Tools menu (both) — real buttons
@@ -130,10 +131,10 @@ export default function SchemeDetailsPage() {
                   EMI only makes sense for loan-based schemes; CSC help
                   ("someone can walk you through any application in
                   person") applies to every scheme. */}
-              {loanBased && <EmiCalculatorButton variant="label" />}
-              <CscLocatorButton variant="label" />
-              <WhatsAppShareButton scheme={scheme} variant="label" />
-              <SaveSchemeButton schemeId={scheme.id} variant="label" />
+              {loanBased && <EmiCalculatorButton variant="label" className={QUICK_ACTION_TILE} />}
+              <CscLocatorButton variant="label" className={QUICK_ACTION_TILE} />
+              <WhatsAppShareButton scheme={scheme} variant="label" className={QUICK_ACTION_TILE} />
+              <SaveSchemeButton schemeId={scheme.id} variant="label" className={QUICK_ACTION_TILE} />
             </div>
           </div>
         </CardHeader>
@@ -160,7 +161,7 @@ export default function SchemeDetailsPage() {
                       href={scheme.officialUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="break-all text-xs font-semibold text-primary underline-offset-4 hover:underline"
+                      className="inline-flex min-h-11 items-center break-all text-xs font-semibold text-primary underline-offset-4 hover:underline sm:min-h-0"
                     >
                       {scheme.officialUrl}
                     </a>
@@ -174,7 +175,7 @@ export default function SchemeDetailsPage() {
                   <Building2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden />
                   <div>
                     <p className="text-sm font-medium text-foreground">{t('schemeDetails.quickRefAdministeredBy')}</p>
-                    <Link href="/institutions" className="text-xs font-semibold text-primary underline-offset-4 hover:underline">
+                    <Link href="/institutions" className="inline-flex min-h-11 items-center text-xs font-semibold text-primary underline-offset-4 hover:underline sm:min-h-0">
                       {institution.name}
                     </Link>
                   </div>

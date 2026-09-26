@@ -38,7 +38,7 @@ export default function InstitutionsPage() {
   }, [search])
 
   return (
-    <main className="container flex flex-col gap-6 py-12">
+    <main className="container flex flex-col gap-6 py-8 sm:py-12">
       <div className="space-y-1">
         <h1 className="font-display text-xl font-semibold text-foreground">{t('institutions.title')}</h1>
         <p className="max-w-2xl text-sm text-muted-foreground">{t('institutions.subtitle')}</p>
@@ -92,7 +92,7 @@ export default function InstitutionsPage() {
               <CardContent className="flex flex-1 flex-col gap-3">
                 <div className="flex flex-1 flex-wrap gap-1.5">
                   {inst.schemes.map((s) => (
-                    <Link key={s.id} href={`/schemes/${s.id}`}>
+                    <Link key={s.id} href={`/schemes/${s.id}`} className="inline-flex min-h-11 items-center sm:min-h-0">
                       <Badge variant="secondary" className="cursor-pointer hover:bg-secondary/70">
                         {s.name}
                       </Badge>
@@ -103,7 +103,7 @@ export default function InstitutionsPage() {
                   href={inst.officialUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-auto flex w-fit items-center gap-1.5 text-xs font-semibold text-primary underline-offset-4 hover:underline"
+                  className="mt-auto flex min-h-11 w-fit items-center gap-1.5 text-xs font-semibold text-primary underline-offset-4 hover:underline sm:min-h-0"
                 >
                   {t('common.officialPortal')}
                   <ExternalLink className="h-3 w-3" aria-hidden />

@@ -1,6 +1,6 @@
 'use client'
 
-import { MessageCircle } from 'lucide-react'
+import { Share2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { useLanguage } from '@/lib/i18n/language-context'
@@ -37,7 +37,7 @@ export function WhatsAppShareButton({ scheme, variant = 'icon', className }: Wha
   if (variant === 'label') {
     return (
       <Button type="button" variant="outline" onClick={handleShare} className={cn('gap-1.5', className)}>
-        <MessageCircle className="h-4 w-4" aria-hidden />
+        <Share2 className="h-4 w-4" aria-hidden />
         {t('common.shareWhatsApp')}
       </Button>
     )
@@ -52,7 +52,7 @@ export function WhatsAppShareButton({ scheme, variant = 'icon', className }: Wha
       aria-label={t('common.shareWhatsApp')}
       className={cn('shrink-0 text-muted-foreground hover:text-success', className)}
     >
-      <MessageCircle className="h-4 w-4" aria-hidden />
+      <Share2 className="h-4 w-4" aria-hidden />
     </Button>
   )
 }

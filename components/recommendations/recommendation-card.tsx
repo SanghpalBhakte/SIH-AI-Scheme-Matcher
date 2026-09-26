@@ -1,13 +1,13 @@
 'use client'
 
-import Link from 'next/link'
-
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { EligibilityStatusBadge, ELIGIBILITY_STATUS_ACCENT } from './eligibility-status-badge'
 import { MatchExplanation } from './match-explanation'
+import { MatchScoreRing } from './match-score-ring'
 import { RecommendationReasoning } from './recommendation-reasoning'
 import { SaveSchemeButton } from '@/components/schemes/save-scheme-button'
+import { SchemeCardActions } from '@/components/schemes/scheme-card-actions'
 import { WhatsAppShareButton } from '@/components/schemes/whatsapp-share-button'
 import { DataConfidenceNote } from '@/components/schemes/data-confidence-note'
 import { SpeakButton } from '@/components/ui/speak-button'
@@ -34,7 +34,11 @@ export function RecommendationCard({ result }: { result: SchemeMatchResult }) {
         ELIGIBILITY_STATUS_ACCENT[eligibilityStatus]
       )}
     >
-      <CardHeader className="space-y-2">
+      <CardHeader className="space-y-3">
+        {/* Row 1: name + score only. The listen/share/save icons used to sit
+            in this row too, squeezing the name to a word per line on phones
+            ("TREAD / Scheme / for / Women"); they now share row 2 with the
+            status badge. */}
         <div className="flex items-start justify-between gap-3">
           {/* min-w-0: same fix as scheme-browser-card.tsx -- without it this
               title column won't shrink below its content's natural width,
@@ -45,14 +49,15 @@ export function RecommendationCard({ result }: { result: SchemeMatchResult }) {
             <h3 className="text-base font-semibold leading-snug text-foreground">{scheme.name}</h3>
             {scheme.ministry && <p className="mt-0.5 text-xs text-muted-foreground">{scheme.ministry}</p>}
           </div>
-          <div className="flex shrink-0 items-start gap-1">
-            <div
-              className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-full border-2 border-primary/20 bg-primary/5 text-center leading-none"
-              aria-label={`${matchScore} percent match`}
-            >
-              <span className="text-sm font-bold text-primary">{matchScore}</span>
-              <span className="text-[9px] font-medium text-muted-foreground">%</span>
-            </div>
+          <MatchScoreRing score={matchScore} />
+        </div>
+
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <EligibilityStatusBadge status={eligibilityStatus} />
+            {scheme.isDemo && <Badge variant="destructive">{t('common.demoSchemeBadge')}</Badge>}
+          </div>
+          <div className="-mr-2 flex items-center">
             <SpeakButton
               text={[scheme.name, scheme.benefit, scheme.summary].join('. ')}
               lang={SCHEME_CONTENT_SPEECH_LANG}
@@ -61,14 +66,9 @@ export function RecommendationCard({ result }: { result: SchemeMatchResult }) {
             <SaveSchemeButton schemeId={scheme.id} />
           </div>
         </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <EligibilityStatusBadge status={eligibilityStatus} />
-          {scheme.isDemo && <Badge variant="destructive">{t('common.demoSchemeBadge')}</Badge>}
-        </div>
       </CardHeader>
 
-      <CardContent className="flex-1 space-y-3 text-sm">
+      <CardContent className="flex flex-1 flex-col gap-3 text-sm">
         <p className="font-medium text-primary">{scheme.benefit}</p>
         <p className="text-muted-foreground">{scheme.summary}</p>
         <DataConfidenceNote scheme={scheme} />
@@ -83,24 +83,7 @@ export function RecommendationCard({ result }: { result: SchemeMatchResult }) {
           <MatchExplanation result={result} />
         </div>
 
-        <div className="flex flex-wrap items-center gap-3 pt-1">
-          <Link
-            href={`/schemes/${scheme.id}`}
-            className="text-xs font-semibold text-foreground underline-offset-4 hover:underline"
-          >
-            {t('common.viewDetails')}
-          </Link>
-          {scheme.officialUrl && (
-            <a
-              href={scheme.officialUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="text-xs font-semibold text-primary underline-offset-4 hover:underline"
-            >
-              {t('common.officialPortal')}
-            </a>
-          )}
-        </div>
+        <SchemeCardActions scheme={scheme} />
       </CardContent>
     </Card>
   )

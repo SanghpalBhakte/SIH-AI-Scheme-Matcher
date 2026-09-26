@@ -54,7 +54,7 @@ export default function SchemesBrowserPage() {
   }
 
   return (
-    <main className="container flex flex-col gap-6 py-12">
+    <main className="container flex flex-col gap-6 py-8 sm:py-12">
       <div className="space-y-1">
         <h1 className="font-display text-xl font-semibold text-foreground">{t('browser.title')}</h1>
         <p className="text-sm text-muted-foreground">{t('browser.subtitle', { count: schemes.length })}</p>

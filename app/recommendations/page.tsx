@@ -33,7 +33,7 @@ export default function RecommendationsPage() {
   // incorrect message before snapping to the real content.
   if (!isHydrated) {
     return (
-      <main className="container flex min-h-[40vh] items-center justify-center py-12">
+      <main className="container flex min-h-[40vh] items-center justify-center py-8 sm:py-12">
         <p className="text-sm text-muted-foreground">{t('common.loading')}</p>
       </main>
     )
@@ -45,7 +45,7 @@ export default function RecommendationsPage() {
   // through the assessment at all.
   if (!isProfileComplete(profile)) {
     return (
-      <main className="container flex flex-col gap-6 py-12">
+      <main className="container flex flex-col gap-6 py-8 sm:py-12">
         <div className="space-y-1">
           <h1 className="font-display text-xl font-semibold text-foreground">{t('recommendations.incompleteTitle')}</h1>
           <p className="text-sm text-muted-foreground">{t('recommendations.incompleteSubtitle')}</p>
@@ -79,8 +79,10 @@ export default function RecommendationsPage() {
   )
 
   return (
-    <main className="container flex flex-col gap-6 py-12">
-      <div className="flex items-start justify-between gap-3">
+    <main className="container flex flex-col gap-6 py-8 sm:py-12">
+      {/* Stacked on phones — side by side, the two buttons squeezed the
+          title into a ~150px column (3 lines of title, 5 of subtitle). */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         {/* min-w-0: defensive, same class of fix as the scheme-card title
             rows -- the title/subtitle here are short in English but some
             of the other 11 translated locales run noticeably longer. */}
@@ -88,7 +90,7 @@ export default function RecommendationsPage() {
           <h1 className="font-display text-xl font-semibold text-foreground">{t('recommendations.title')}</h1>
           <p className="text-sm text-muted-foreground">{t('recommendations.subtitle')}</p>
         </div>
-        <div className="flex shrink-0 flex-col items-end gap-1">
+        <div className="flex shrink-0 flex-wrap items-center gap-2 sm:flex-col sm:items-end sm:gap-1">
           <Button variant="outline" size="sm" asChild>
             <Link href="/assessment">
               <ArrowLeft className="h-4 w-4" />

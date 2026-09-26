@@ -146,7 +146,7 @@ export default function AssessmentPage() {
   }
 
   return (
-    <main className="container flex flex-col gap-10 py-12">
+    <main className="container flex flex-col gap-10 py-8 sm:py-12">
       <div className="mx-auto w-full max-w-2xl space-y-6">
         <div className="space-y-4">
           <div className="flex items-center justify-between gap-2">
@@ -160,7 +160,7 @@ export default function AssessmentPage() {
           {isFirstStep && (
             <a
               href="#demo-profiles"
-              className="inline-block text-xs font-medium text-primary underline-offset-4 hover:underline"
+              className="inline-flex min-h-11 items-center text-xs font-medium text-primary underline-offset-4 hover:underline sm:min-h-0"
             >
               {t('assessment.jumpToDemo')}
             </a>
@@ -247,7 +247,7 @@ export default function AssessmentPage() {
                 </div>
 
                 <details className="group rounded-lg border border-border bg-secondary/30 p-3 open:pb-3.5">
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-2 text-sm font-medium text-foreground">
+                  <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-sm font-medium text-foreground sm:min-h-0">
                     {t('assessment.optionalDetails')}
                     <ChevronDown
                       className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-180"
@@ -406,7 +406,7 @@ export default function AssessmentPage() {
                 </div>
 
                 <details className="group rounded-lg border border-border bg-secondary/30 p-3 open:pb-3.5">
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-2 text-sm font-medium text-foreground">
+                  <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-sm font-medium text-foreground sm:min-h-0">
                     {t('assessment.optionalDetails')}
                     <ChevronDown
                       className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-180"
@@ -523,7 +523,7 @@ export default function AssessmentPage() {
                   </Select>
                 </div>
                 <details className="group rounded-lg border border-border bg-secondary/30 p-3 open:pb-3.5">
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-2 text-sm font-medium text-foreground">
+                  <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-sm font-medium text-foreground sm:min-h-0">
                     {t('assessment.optionalDetails')}
                     <ChevronDown
                       className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-180"
@@ -625,12 +625,15 @@ export default function AssessmentPage() {
 
             {!canAdvance && <p className="text-sm leading-relaxed text-warning">{helperText[step.id]}</p>}
           </CardContent>
-          <CardFooter className="flex justify-between">
-            <Button variant="outline" onClick={previousStep} disabled={isFirstStep} className="group">
+          {/* Phones: primary action full width on top, Back underneath (the
+              last step's "See my recommendations" didn't fit beside Back and
+              pushed the page 18px wider than a 360px screen). */}
+          <CardFooter className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-between">
+            <Button variant="outline" onClick={previousStep} disabled={isFirstStep} className="group w-full sm:w-auto">
               <ArrowLeft className="h-4 w-4 transition-transform duration-150 group-hover:-translate-x-0.5" />
               {t('common.back')}
             </Button>
-            <Button onClick={handleNext} disabled={!canAdvance} className="group">
+            <Button onClick={handleNext} disabled={!canAdvance} className="group w-full sm:w-auto">
               {isLastStep ? t('assessment.seeRecommendations') : t('common.next')}
               <ArrowRight className="h-4 w-4 transition-transform duration-150 group-hover:translate-x-0.5" />
             </Button>
@@ -642,7 +645,7 @@ export default function AssessmentPage() {
             <button
               type="button"
               onClick={() => router.push('/recommendations')}
-              className="text-xs font-medium text-primary underline-offset-4 hover:underline"
+              className="inline-flex min-h-11 items-center text-xs font-medium text-primary underline-offset-4 hover:underline sm:min-h-0"
             >
               {t('assessment.skipToMatches')}
             </button>
